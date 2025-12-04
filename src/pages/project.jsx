@@ -21,7 +21,7 @@ export default function Projects() {
       description:
         "Aarsh Wedding Videography is a professional event photography and videography website I developed for a small business. It showcases services, a dynamic portfolio gallery, and a client-friendly contact section. Built with the MERN stack, Tailwind CSS, and Cloudinary, the site delivers an elegant, responsive, and user-focused design tailored for weddings and special events.",
       image: "https://i.ibb.co/XrPG9mKK/Screenshot-2025-08-16-231710.png",
-      github: "https://github.com/nishant95086/Aarsh_wedding_videography",
+      github: "https://github.com/nishantkumar35/Aarsh_wedding_videography",
       demo: "https://aarsh-wedding-videography.vercel.app",
       category: "Full-Stack Web App",
       technologies: ["React", "Node.js", "MongoDB", "Tailwind", "Cloudinary"],
@@ -34,7 +34,7 @@ export default function Projects() {
       description:
         "PiggyPal is a modern personal finance management web app I built to help users track incomes, savings, expenses, wishes, loans (Udhar), and tasks (ToDos). It features authentication (signup, login, password change), CRUD operations for financial records, and a clean responsive UI. Built with the MERN stack, Tailwind CSS, and Framer Motion, PiggyPal provides an intuitive and interactive way to manage money effectively.",
       image: "https://i.ibb.co/7tpXwXCC/Screenshot-2025-09-26-112136.png",
-      github: "https://github.com/nishant95086/piggypal",
+      github: "https://github.com/nishantkumar35/piggypal",
       demo: "https://piggypal-theta.vercel.app/",
       category: "Full-Stack Web App",
       technologies: [

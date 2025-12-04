@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+
+// Icons
 import {
   SiC,
   SiCplusplus,
@@ -16,8 +18,17 @@ import {
   SiVercel,
   SiGithub,
   SiGit,
+  SiHtml5,
+  SiCss3,
+  SiFramer,
+  SiNextdotjs,
+  SiJsonwebtokens,
 } from "react-icons/si";
+import { FaLock } from "react-icons/fa";
+
 import { FaJava } from "react-icons/fa";
+
+// ===================== UPDATED SKILL CATEGORIES ===================== //
 
 const skillCategories = [
   {
@@ -38,6 +49,8 @@ const skillCategories = [
       { name: "Java", icon: <FaJava />, color: "hover:text-orange-500" },
     ],
   },
+
+  // 🌐 Web Technologies Expanded
   {
     category: "Web Technologies",
     gradient: "from-green-500 to-cyan-600",
@@ -45,17 +58,35 @@ const skillCategories = [
     borderGradient: "from-green-500/30 to-cyan-600/30",
     emoji: "🌐",
     skills: [
-      { name: "React", icon: <SiReact />, color: "hover:text-cyan-400" },
-      { name: "Node.js", icon: <SiNodedotjs />, color: "hover:text-green-400" },
-      { name: "Express.js", icon: <SiExpress />, color: "hover:text-gray-300" },
-      { name: "Redux", icon: <SiRedux />, color: "hover:text-purple-400" },
+      { name: "HTML", icon: <SiHtml5 />, color: "hover:text-orange-400" },
+      { name: "CSS", icon: <SiCss3 />, color: "hover:text-blue-400" },
       {
         name: "Tailwind CSS",
         icon: <SiTailwindcss />,
         color: "hover:text-teal-400",
       },
+      { name: "ReactJS", icon: <SiReact />, color: "hover:text-cyan-400" },
+      {
+        name: "Framer Motion",
+        icon: <SiFramer />,
+        color: "hover:text-pink-400",
+      },
+      { name: "Node.js", icon: <SiNodedotjs />, color: "hover:text-green-400" },
+      { name: "ExpressJS", icon: <SiExpress />, color: "hover:text-gray-300" },
+      {
+        name: "RESTful APIs",
+        icon: <SiJavascript />,
+        color: "hover:text-yellow-500",
+      },
+      { name: "JWT", icon: <SiJsonwebtokens />, color: "hover:text-red-400" },
+      { name: "OAuth", icon: <FaLock />, color: "hover:text-green-400" },
+
+      { name: "Redux", icon: <SiRedux />, color: "hover:text-purple-400" },
+       { name: "Next.js", icon: <SiNextdotjs />, color: "hover:text-white" },
     ],
   },
+
+  // 🗄️ Databases
   {
     category: "Databases",
     gradient: "from-orange-500 to-red-600",
@@ -67,8 +98,10 @@ const skillCategories = [
       { name: "MongoDB", icon: <SiMongodb />, color: "hover:text-green-400" },
     ],
   },
+
+  // 🚀 Deployment
   {
-    category: "Web Hosting / Deployment",
+    category: "Hosting / Deployment",
     gradient: "from-pink-500 to-violet-600",
     bgGradient: "from-pink-500/10 to-violet-600/10",
     borderGradient: "from-pink-500/30 to-violet-600/30",
@@ -76,9 +109,13 @@ const skillCategories = [
     skills: [
       { name: "Render", icon: <SiRender />, color: "hover:text-purple-400" },
       { name: "Vercel", icon: <SiVercel />, color: "hover:text-white" },
+      { name: "Git", icon: <SiGit />, color: "hover:text-orange-500" },
+      { name: "GitHub", icon: <SiGithub />, color: "hover:text-gray-300" },
     ],
   },
 ];
+
+// ===================== MAIN COMPONENT ===================== //
 
 export default function Skills() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -96,11 +133,7 @@ export default function Skills() {
   // Animation variants
   const containerVariants = {
     hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
+    visible: { transition: { staggerChildren: 0.2 } },
   };
 
   const categoryVariants = {
@@ -122,11 +155,12 @@ export default function Skills() {
     },
   };
 
+  // ===================== RENDER ===================== //
+
   return (
     <div className="relative min-h-screen overflow-hidden">
-      {/* Enhanced Animated Background */}
+      {/* Background effects */}
       <div>
-        {/* Floating code symbols */}
         <div className="absolute top-20 left-10 text-purple-400/30 text-6xl animate-float font-mono">
           &lt;/&gt;
         </div>
@@ -140,12 +174,12 @@ export default function Skills() {
           []
         </div>
 
-        {/* Large floating orbs */}
+        {/* Floating Lights */}
         <div className="absolute top-10 right-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-10 left-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
         <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
 
-        {/* Interactive mouse follower */}
+        {/* mouse follower */}
         <div
           className="absolute w-96 h-96 bg-gradient-radial from-purple-500/15 via-blue-500/8 to-transparent rounded-full blur-3xl pointer-events-none"
           style={{
@@ -157,18 +191,20 @@ export default function Skills() {
         ></div>
       </div>
 
+      {/* Content */}
       <div className="relative z-10 text-white font-mono flex flex-col items-center justify-center px-6 py-20">
-        {/* Enhanced Heading */}
+        {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: -50, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center mb-16"
         >
-          <h1 className="text-5xl p-2 md:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 bg-clip-text text-transparent relative mb-4">
+          <h1 className="text-5xl md:text-6xl font-bold p-2 bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 bg-clip-text text-transparent relative mb-4">
             My Skills
             <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-purple-400 to-cyan-400 rounded-full animate-pulse"></div>
           </h1>
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -179,7 +215,7 @@ export default function Skills() {
           </motion.p>
         </motion.div>
 
-        {/* Enhanced Grid layout for categories */}
+        {/* Skill Cards */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -193,9 +229,8 @@ export default function Skills() {
               variants={categoryVariants}
               className="group relative"
             >
-              {/* Enhanced Category Card */}
               <div
-                className={`bg-gradient-to-br from-slate-800/60 to-slate-700/40 backdrop-blur-sm p-8 rounded-3xl border  shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-purple-500/20 relative overflow-hidden`}
+                className={`bg-gradient-to-br from-slate-800/60 to-slate-700/40 backdrop-blur-sm p-8 rounded-3xl border shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-purple-500/20 relative overflow-hidden`}
               >
                 {/* Category Header */}
                 <div className="text-center mb-8">
@@ -213,7 +248,7 @@ export default function Skills() {
                   </div>
                 </div>
 
-                {/* Enhanced Skill badges */}
+                {/* Skills */}
                 <motion.div
                   variants={containerVariants}
                   className="flex flex-wrap justify-center gap-4"
@@ -222,11 +257,7 @@ export default function Skills() {
                     <motion.div
                       key={i}
                       variants={skillVariants}
-                      whileHover={{
-                        scale: 1.15,
-                        rotate: [0, -2, 2, 0],
-                        y: -5,
-                      }}
+                      whileHover={{ scale: 1.15, rotate: [0, -2, 2, 0], y: -5 }}
                       whileTap={{ scale: 0.95 }}
                       onHoverStart={() => setHoveredSkill(`${idx}-${i}`)}
                       onHoverEnd={() => setHoveredSkill(null)}
@@ -242,12 +273,11 @@ export default function Skills() {
                           {skill.name}
                         </span>
 
-                        {/* Skill hover effect */}
+                        {/* Hover Glow */}
                         <div
                           className={`absolute inset-0 bg-gradient-to-r ${category.gradient} opacity-0 group-hover/skill:opacity-20 rounded-2xl transition-opacity duration-300`}
-                        ></div>
+                        />
 
-                        {/* Animated border */}
                         <div
                           className={`absolute inset-0 bg-gradient-to-r ${category.gradient} opacity-0 group-hover/skill:opacity-100 rounded-2xl p-[2px] transition-opacity duration-300`}
                         >
@@ -255,7 +285,7 @@ export default function Skills() {
                         </div>
                       </div>
 
-                      {/* Floating tooltip */}
+                      {/* Tooltip */}
                       {hoveredSkill === `${idx}-${i}` && (
                         <motion.div
                           initial={{ opacity: 0, y: 10, scale: 0.8 }}
@@ -270,22 +300,20 @@ export default function Skills() {
                   ))}
                 </motion.div>
 
-                {/* Category background decoration */}
+                {/* Background Decorations */}
                 <div
                   className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${category.bgGradient} rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500`}
-                ></div>
+                />
                 <div
                   className={`absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr ${category.bgGradient} rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500`}
-                ></div>
+                />
               </div>
             </motion.div>
           ))}
         </motion.div>
-
-       
       </div>
 
-      {/* Enhanced CSS Animations */}
+      {/* CSS Animations */}
       <style jsx>{`
         @keyframes float {
           0%,
@@ -296,15 +324,6 @@ export default function Skills() {
           50% {
             transform: translateY(-30px) rotate(10deg);
             opacity: 0.6;
-          }
-        }
-
-        @keyframes grid-flow {
-          0% {
-            transform: translate(0, 0);
-          }
-          100% {
-            transform: translate(100px, 100px);
           }
         }
 
@@ -321,11 +340,6 @@ export default function Skills() {
         .animate-float {
           animation: float 8s ease-in-out infinite;
         }
-
-        .animate-grid-flow {
-          animation: grid-flow 40s linear infinite;
-        }
-
         .animate-bounce-slow {
           animation: bounce-slow 4s ease-in-out infinite;
         }
@@ -342,11 +356,6 @@ export default function Skills() {
 
         .bg-gradient-radial {
           background: radial-gradient(var(--tw-gradient-stops));
-        }
-
-        /* Custom hover effects */
-        .group/skill:hover .group-hover\\/skill\\:scale-125 {
-          transform: scale(1.25) rotate(12deg);
         }
       `}</style>
     </div>

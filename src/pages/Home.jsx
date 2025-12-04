@@ -108,14 +108,14 @@ export default function Home() {
           <div className="flex mt-5 gap-3 justify-center lg:justify-start animate-fade-in-up animation-delay-2000">
             <div className="transform hover:scale-110 transition-all duration-300 hover:rotate-3">
               <CustomButton
-                href="https://www.linkedin.com/in/nishant-kumar-05990624a/"
+                href="https://www.linkedin.com/in/nishantkumar35/"
                 icon={FaLinkedin}
                 label="LinkedIn"
               />
             </div>
             <div className="transform hover:scale-110 transition-all duration-300 hover:-rotate-3">
               <CustomButton
-                href="https://github.com/nishant95086/"
+                href="https://github.com/nishantkumar35"
                 icon={FaGithub}
                 label="GitHub"
               />
