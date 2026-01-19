@@ -119,7 +119,7 @@ export default function About() {
                     👨‍💻
                   </div>
                   <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    My Journey
+                    Who I Am
                   </h2>
                 </div>
               </motion.div>
