@@ -11,7 +11,14 @@ export default function Projects() {
         "A professional event photography and videography website developed for a small business. Features a dynamic portfolio gallery, service showcase, and client-friendly contact section. Built with modern web technologies for an elegant, responsive experience.",
       github: "https://github.com/nishantkumar35/Aarsh_wedding_videography",
       demo: "https://aarsh-wedding-videography.vercel.app",
-      technologies: ["React", "Node.js", "MongoDB", "Tailwind", "Cloudinary"],
+      technologies: [
+        "React",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Tailwind",
+        "Cloudinary",
+      ],
       color: "purple",
     },
     {
@@ -20,8 +27,38 @@ export default function Projects() {
         "A modern personal finance management app that helps users track incomes, savings, expenses, wishes, loans, and tasks. Features complete authentication, CRUD operations, and an intuitive responsive UI for effective money management.",
       github: "https://github.com/nishantkumar35/piggypal",
       demo: "https://piggypal-theta.vercel.app/",
-      technologies: ["React", "Node.js", "MongoDB", "Tailwind", "Framer Motion"],
+      technologies: [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "Express",
+        "Tailwind",
+        "Framer Motion",
+        "JWT",
+      ],
       color: "blue",
+    },
+    {
+      title: "DocMatch - AI Healthcare System",
+      description:
+        "An advanced healthcare platform leveraging AI to match patients with specialists based on symptom descriptions. Features a transformer-based specialty predictor, verified doctor profiles, and a robust review management system. Built with a premium glassmorphism UI for a seamless user experience.",
+      github:
+        "https://github.com/nishantkumar35/doctor_reviews_and_recommendations",
+      demo: "https://doctor-reviews-and-recommendations.vercel.app/",
+      technologies: [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "Express",
+        "Tailwind",
+        "Google Auth",
+        "Transformers.js",
+        "Cloudinary",
+        "Framer Motion",
+        "Nodemailer",
+        "JWT",
+      ],
+      color: "cyan",
     },
   ];
 
@@ -39,6 +76,13 @@ export default function Projects() {
       text: "text-blue-400",
       button: "bg-blue-500 hover:bg-blue-600",
       outline: "border-blue-500/50 text-blue-400 hover:bg-blue-500/10",
+    },
+    cyan: {
+      border: "border-cyan-500/30 hover:border-cyan-500/60",
+      bg: "bg-cyan-500/5 hover:bg-cyan-500/10",
+      text: "text-cyan-400",
+      button: "bg-cyan-500 hover:bg-cyan-600",
+      outline: "border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10",
     },
   };
 
@@ -71,7 +115,7 @@ export default function Projects() {
                   relative border-2 rounded-2xl p-6 sm:p-8 
                   transition-all duration-300 ease-out
                   ${colors.border} ${colors.bg}
-                  ${isHovered ? 'transform scale-[1.02] shadow-2xl' : 'shadow-lg'}
+                  ${isHovered ? "transform scale-[1.02] shadow-2xl" : "shadow-lg"}
                 `}
               >
                 {/* Folder Icon */}
@@ -102,7 +146,7 @@ export default function Projects() {
                 <h2 className="text-2xl sm:text-3xl font-bold mb-3">
                   {project.title}
                 </h2>
-                
+
                 <p className="text-gray-300 mb-6 leading-relaxed">
                   {project.description}
                 </p>
