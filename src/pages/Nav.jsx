@@ -5,6 +5,8 @@ import {
   FaTools,
   FaProjectDiagram,
   FaEnvelope,
+  FaTrophy,
+  FaCertificate,
 } from "react-icons/fa";
 import { FiMenu, FiX } from "react-icons/fi";
 import { Link } from "react-scroll";
@@ -19,45 +21,64 @@ export default function Nav() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navLinks = [
-    { 
-      to: "home", 
-      label: "Home", 
-      icon: FaHome, 
+    {
+      to: "home",
+      label: "Home",
+      icon: FaHome,
       gradient: "from-purple-400 to-pink-500",
-      hoverBg: "hover:bg-purple-500/20"
+      hoverBg: "hover:bg-purple-500/20",
     },
-    { 
-      to: "about", 
-      label: "About", 
-      icon: FaUser, 
+    {
+      to: "about",
+      label: "About",
+      icon: FaUser,
       gradient: "from-blue-400 to-cyan-500",
-      hoverBg: "hover:bg-blue-500/20"
+      hoverBg: "hover:bg-blue-500/20",
     },
-    { 
-      to: "skills", 
-      label: "Skills", 
-      icon: FaTools, 
+    {
+      to: "skills",
+      label: "Skills",
+      icon: FaTools,
       gradient: "from-green-400 to-emerald-500",
-      hoverBg: "hover:bg-green-500/20"
+      hoverBg: "hover:bg-green-500/20",
     },
-    { 
-      to: "projects", 
-      label: "Projects", 
-      icon: FaProjectDiagram, 
+    {
+      to: "projects",
+      label: "Projects",
+      icon: FaProjectDiagram,
       gradient: "from-orange-400 to-red-500",
-      hoverBg: "hover:bg-orange-500/20"
+      hoverBg: "hover:bg-orange-500/20",
     },
-    { 
-      to: "contact", 
-      label: "Contact", 
-      icon: FaEnvelope, 
+
+    /* New Section */
+
+    {
+      to: "achievements",
+      label: "Achievements",
+      icon: FaTrophy,
+      gradient: "from-yellow-400 to-orange-500",
+      hoverBg: "hover:bg-yellow-500/20",
+    },
+
+    {
+      to: "certificates",
+      label: "Certificates",
+      icon: FaCertificate,
+      gradient: "from-indigo-400 to-purple-500",
+      hoverBg: "hover:bg-indigo-500/20",
+    },
+
+    {
+      to: "contact",
+      label: "Contact",
+      icon: FaEnvelope,
       gradient: "from-pink-400 to-violet-500",
-      hoverBg: "hover:bg-pink-500/20"
+      hoverBg: "hover:bg-pink-500/20",
     },
   ];
 
@@ -68,9 +89,9 @@ export default function Nav() {
         <button
           onClick={() => setIsOpen(true)}
           className={`text-white text-3xl z-50 cursor-pointer backdrop-blur-md p-3 rounded-2xl border transition-all duration-300 hover:scale-110 ${
-            scrolled 
-              ? 'bg-slate-900/80 border-purple-500/30 shadow-lg shadow-purple-500/20' 
-              : 'bg-slate-800/60 border-white/10'
+            scrolled
+              ? "bg-slate-900/80 border-purple-500/30 shadow-lg shadow-purple-500/20"
+              : "bg-slate-800/60 border-white/10"
           }`}
         >
           {!isOpen && <FiMenu className="drop-shadow-lg" />}
@@ -79,7 +100,7 @@ export default function Nav() {
 
       {/* Enhanced Backdrop Overlay */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 lg:hidden"
           onClick={() => setIsOpen(false)}
         />
@@ -94,7 +115,7 @@ export default function Nav() {
         {/* Animated background elements */}
         <div className="absolute top-10 right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-20 left-10 w-24 h-24 bg-cyan-500/10 rounded-full blur-2xl animate-pulse animation-delay-1000"></div>
-        
+
         {/* Close button */}
         <div className="flex justify-end p-6">
           <button
@@ -116,56 +137,8 @@ export default function Nav() {
 
         {/* Enhanced Nav links */}
         <nav className="flex flex-col px-6 gap-2 text-white relative">
-          {navLinks.map(({ to, label, icon: Icon, gradient, hoverBg }, index) => (
-            <Link
-              key={to}
-              to={to}
-              smooth={true}
-              duration={600}
-              spy={true}
-              offset={-70}
-              onClick={() => setIsOpen(false)}
-              onSetActive={() => setActiveSection(to)}
-              activeClass="nav-active"
-              className={`group relative flex items-center gap-4 cursor-pointer transition-all duration-300 p-4 rounded-2xl ${hoverBg} hover:scale-105 hover:translate-x-2`}
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              {/* Active indicator */}
-              <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-0 bg-gradient-to-b ${gradient} rounded-full transition-all duration-300 group-hover:h-05`}></div>
-              
-              {/* Icon with gradient background */}
-              <div className={`relative p-3 rounded-xl bg-gradient-to-r ${gradient} bg-opacity-20 group-hover:scale-110 transition-all duration-300`}>
-                <Icon className="text-lg relative z-10" />
-                <div className={`absolute inset-0 bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-20 rounded-xl transition-opacity duration-300`}></div>
-              </div>
-              
-              {/* Label */}
-              <span className="font-medium group-hover:text-white transition-colors duration-300 relative">
-                {label}
-                <div className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r ${gradient} transition-all duration-300 group-hover:w-full`}></div>
-              </span>
-
-              {/* Hover glow effect */}
-              <div className={`absolute inset-0 bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`}></div>
-            </Link>
-          ))}
-        </nav>
-
-        
-
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-purple-500/5 to-transparent pointer-events-none"></div>
-      </div>
-
-      {/* Desktop Navigation (Optional Enhancement) */}
-      <div className={`hidden lg:hidden fixed top-6 left-1/2 transform -translate-x-1/2 z-40 transition-all duration-500 ${
-        scrolled ? 'translate-y-0' : 'translate-y-2'
-      }`}>
-        <div className={`bg-slate-900/80 backdrop-blur-xl border border-purple-500/20 rounded-2xl px-2 py-2 shadow-2xl shadow-purple-500/10 transition-all duration-300 ${
-          scrolled ? 'shadow-lg' : ''
-        }`}>
-          <nav className="flex gap-2">
-            {navLinks.map(({ to, label, icon: Icon, gradient, hoverBg }, index) => (
+          {navLinks.map(
+            ({ to, label, icon: Icon, gradient, hoverBg }, index) => (
               <Link
                 key={to}
                 to={to}
@@ -173,17 +146,85 @@ export default function Nav() {
                 duration={600}
                 spy={true}
                 offset={-70}
+                onClick={() => setIsOpen(false)}
                 onSetActive={() => setActiveSection(to)}
-                activeClass="desktop-nav-active"
-                className={`group relative flex items-center gap-3 cursor-pointer transition-all duration-300 px-4 py-3 rounded-xl ${hoverBg} hover:scale-105`}
+                activeClass="nav-active"
+                className={`group relative flex items-center gap-4 cursor-pointer transition-all duration-300 p-4 rounded-2xl ${hoverBg} hover:scale-105 hover:translate-x-2`}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <Icon className="text-lg" />
-                <span className="font-medium text-sm whitespace-nowrap">{label}</span>
-                
                 {/* Active indicator */}
-                <div className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r ${gradient} transition-all duration-300 group-hover:h-0.5 group-hover:w-4/5`}></div>
+                <div
+                  className={`absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-0 bg-gradient-to-b ${gradient} rounded-full transition-all duration-300 group-hover:h-05`}
+                ></div>
+
+                {/* Icon with gradient background */}
+                <div
+                  className={`relative p-3 rounded-xl bg-gradient-to-r ${gradient} bg-opacity-20 group-hover:scale-110 transition-all duration-300`}
+                >
+                  <Icon className="text-lg relative z-10" />
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-20 rounded-xl transition-opacity duration-300`}
+                  ></div>
+                </div>
+
+                {/* Label */}
+                <span className="font-medium group-hover:text-white transition-colors duration-300 relative">
+                  {label}
+                  <div
+                    className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r ${gradient} transition-all duration-300 group-hover:w-full`}
+                  ></div>
+                </span>
+
+                {/* Hover glow effect */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`}
+                ></div>
               </Link>
-            ))}
+            ),
+          )}
+        </nav>
+
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-purple-500/5 to-transparent pointer-events-none"></div>
+      </div>
+
+      {/* Desktop Navigation (Optional Enhancement) */}
+      <div
+        className={`hidden lg:hidden fixed top-6 left-1/2 transform -translate-x-1/2 z-40 transition-all duration-500 ${
+          scrolled ? "translate-y-0" : "translate-y-2"
+        }`}
+      >
+        <div
+          className={`bg-slate-900/80 backdrop-blur-xl border border-purple-500/20 rounded-2xl px-2 py-2 shadow-2xl shadow-purple-500/10 transition-all duration-300 ${
+            scrolled ? "shadow-lg" : ""
+          }`}
+        >
+          <nav className="flex gap-2">
+            {navLinks.map(
+              ({ to, label, icon: Icon, gradient, hoverBg }, index) => (
+                <Link
+                  key={to}
+                  to={to}
+                  smooth={true}
+                  duration={600}
+                  spy={true}
+                  offset={-70}
+                  onSetActive={() => setActiveSection(to)}
+                  activeClass="desktop-nav-active"
+                  className={`group relative flex items-center gap-3 cursor-pointer transition-all duration-300 px-4 py-3 rounded-xl ${hoverBg} hover:scale-105`}
+                >
+                  <Icon className="text-lg" />
+                  <span className="font-medium text-sm whitespace-nowrap">
+                    {label}
+                  </span>
+
+                  {/* Active indicator */}
+                  <div
+                    className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r ${gradient} transition-all duration-300 group-hover:h-0.5 group-hover:w-4/5`}
+                  ></div>
+                </Link>
+              ),
+            )}
           </nav>
         </div>
       </div>
@@ -230,11 +271,21 @@ export default function Nav() {
           opacity: 0;
         }
 
-        .group:nth-child(1) { animation-delay: 0.1s; }
-        .group:nth-child(2) { animation-delay: 0.2s; }
-        .group:nth-child(3) { animation-delay: 0.3s; }
-        .group:nth-child(4) { animation-delay: 0.4s; }
-        .group:nth-child(5) { animation-delay: 0.5s; }
+        .group:nth-child(1) {
+          animation-delay: 0.1s;
+        }
+        .group:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+        .group:nth-child(3) {
+          animation-delay: 0.3s;
+        }
+        .group:nth-child(4) {
+          animation-delay: 0.4s;
+        }
+        .group:nth-child(5) {
+          animation-delay: 0.5s;
+        }
       `}</style>
     </>
   );

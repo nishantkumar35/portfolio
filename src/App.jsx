@@ -7,6 +7,8 @@ import Projects from "./pages/project";
 import Skills from "./pages/Skill";
 import Nav from "./pages/Nav";
 import { Element } from "react-scroll";
+import Certifications from "./pages/Certificate";
+import Achievements from "./pages/Achievement";
 
 function App() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -61,6 +63,13 @@ function App() {
         
         <Element name="projects" className="min-h-screen">
           <Projects />
+        </Element>
+
+        <Element name="certifications" className="min-h-screen">
+          <Certifications />
+        </Element>
+        <Element name="achievements" className="min-h-screen">
+          <Achievements />
         </Element>
         
         <Element name="contact" className="min-h-screen">

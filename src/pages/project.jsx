@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ExternalLink, Github, Folder } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 
 export default function Projects() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -8,9 +8,10 @@ export default function Projects() {
     {
       title: "Event Photography & Videography Website",
       description:
-        "A professional event photography and videography website developed for a small business. Features a dynamic portfolio gallery, service showcase, and client-friendly contact section. Built with modern web technologies for an elegant, responsive experience.",
+        "A professional event photography and videography website developed for a small business. Features a dynamic portfolio gallery, service showcase, and client-friendly contact section.",
       github: "https://github.com/nishantkumar35/Aarsh_wedding_videography",
       demo: "https://aarsh-wedding-videography.vercel.app",
+      image: "https://i.ibb.co/XrPG9mKK/Screenshot-2025-08-16-231710.png",
       technologies: [
         "React",
         "Node.js",
@@ -24,9 +25,10 @@ export default function Projects() {
     {
       title: "PiggyPal - Personal Finance Dashboard",
       description:
-        "A modern personal finance management app that helps users track incomes, savings, expenses, wishes, loans, and tasks. Features complete authentication, CRUD operations, and an intuitive responsive UI for effective money management.",
+        "A modern personal finance management app that helps users track incomes, savings, expenses, wishes, loans, and tasks.",
       github: "https://github.com/nishantkumar35/piggypal",
       demo: "https://piggypal-theta.vercel.app/",
+      image: "https://i.ibb.co/hRrtrv3S/Screenshot-2026-03-15-222427.png",
       technologies: [
         "React",
         "Node.js",
@@ -41,10 +43,11 @@ export default function Projects() {
     {
       title: "DocMatch - AI Healthcare System",
       description:
-        "An advanced healthcare platform leveraging AI to match patients with specialists based on symptom descriptions. Features a transformer-based specialty predictor, verified doctor profiles, and a robust review management system. Built with a premium glassmorphism UI for a seamless user experience.",
+        "An advanced healthcare platform leveraging AI to match patients with specialists based on symptoms.",
       github:
         "https://github.com/nishantkumar35/doctor_reviews_and_recommendations",
       demo: "https://doctor-reviews-and-recommendations.vercel.app/",
+      image: "https://i.ibb.co/HTSPMVpJ/Screenshot-2026-03-15-222643.png",
       technologies: [
         "React",
         "Node.js",
@@ -55,7 +58,6 @@ export default function Projects() {
         "Transformers.js",
         "Cloudinary",
         "Framer Motion",
-        "Nodemailer",
         "JWT",
       ],
       color: "cyan",
@@ -90,17 +92,20 @@ export default function Projects() {
     <div className="min-h-screen text-white px-4 py-12 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
+
         <div className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">
             Featured <span className="text-purple-400">Projects</span>
           </h1>
+
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             A selection of my recent work in full-stack web development
           </p>
         </div>
 
-        {/* Projects List */}
-        <div className="space-y-8 flex flex-wrap gap-5 justify-center mx-auto">
+        {/* Projects Grid */}
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => {
             const colors = colorClasses[project.color];
             const isHovered = hoveredIndex === index;
@@ -111,86 +116,89 @@ export default function Projects() {
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
                 className={`
-                  w-xl
-                  relative border-2 rounded-2xl p-6 sm:p-8 
-                  transition-all duration-300 ease-out
+                  relative border rounded-2xl overflow-hidden
+                  transition-all duration-300
                   ${colors.border} ${colors.bg}
-                  ${isHovered ? "transform scale-[1.02] shadow-2xl" : "shadow-lg"}
+                  ${isHovered ? "scale-[1.02] shadow-2xl" : "shadow-lg"}
                 `}
               >
-                {/* Folder Icon */}
-                <div className="flex items-start justify-between mb-6 ml-[90%]">
-                  <div className="flex gap-3">
+                {/* Image Section */}
+
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+
+                  {/* Top Right Icons */}
+
+                  <div className="absolute top-3 right-3 flex gap-2">
                     <a
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`${colors.text} hover:scale-110 transition-transform`}
-                      aria-label="View GitHub repository"
+                      className="p-2 rounded-lg bg-black/60 backdrop-blur border border-white/20 hover:bg-black/80 transition"
                     >
-                      <Github className="w-5 h-5" />
+                      <Github className="w-4 h-4 text-white" />
                     </a>
+
                     <a
                       href={project.demo}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`${colors.text} hover:scale-110 transition-transform`}
-                      aria-label="View live demo"
+                      className="p-2 rounded-lg bg-black/60 backdrop-blur border border-white/20 hover:bg-black/80 transition"
                     >
-                      <ExternalLink className="w-5 h-5" />
+                      <ExternalLink className="w-4 h-4 text-white" />
                     </a>
                   </div>
                 </div>
 
                 {/* Content */}
-                <h2 className="text-2xl sm:text-3xl font-bold mb-3">
-                  {project.title}
-                </h2>
 
-                <p className="text-gray-300 mb-6 leading-relaxed">
-                  {project.description}
-                </p>
+                <div className="p-6">
+                  <h2 className="text-xl font-bold mb-2">{project.title}</h2>
 
-                {/* Technologies */}
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.technologies.map((tech, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 bg-slate-800 text-gray-300 rounded-full text-sm border border-slate-700"
+                  <p className="text-gray-300 text-sm mb-4">
+                    {project.description}
+                  </p>
+
+                  {/* Tech Stack */}
+
+                  <div className="flex flex-wrap gap-2 mb-5">
+                    {project.technologies.map((tech, i) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1 bg-slate-800 text-gray-300 rounded-full text-xs border border-slate-700"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Buttons */}
+
+                  <div className="flex gap-3">
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm ${colors.button}`}
                     >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
+                      <Github className="w-4 h-4" />
+                      Code
+                    </a>
 
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-3">
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`
-                      inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
-                      font-medium transition-all duration-200
-                      ${colors.button} text-white
-                    `}
-                  >
-                    <Github className="w-4 h-4" />
-                    View Code
-                  </a>
-                  <a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`
-                      inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
-                      font-medium transition-all duration-200 border-2
-                      ${colors.outline}
-                    `}
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    Live Demo
-                  </a>
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm border ${colors.outline}`}
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Demo
+                    </a>
+                  </div>
                 </div>
               </div>
             );

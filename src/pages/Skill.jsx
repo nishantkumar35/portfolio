@@ -22,7 +22,9 @@ import {
   SiFramer,
   SiNextdotjs,
   SiJsonwebtokens,
+  SiPrisma
 } from "react-icons/si";
+import { FaBullseye, FaBrain, FaSyncAlt, FaPuzzlePiece } from "react-icons/fa";
 import { FaJava, FaLock } from "react-icons/fa";
 
 export default function Skills() {
@@ -67,6 +69,7 @@ export default function Skills() {
       skills: [
         { icon: <SiMysql />, name: "MySQL", color: "text-blue-400" },
         { icon: <SiMongodb />, name: "MongoDB", color: "text-green-500" },
+        { icon: <SiPrisma />, name: "Prisma", color: "text-purple-500" },
       ],
     },
     {
@@ -76,6 +79,15 @@ export default function Skills() {
         { icon: <SiGithub />, name: "GitHub", color: "text-white" },
         { icon: <SiVercel />, name: "Vercel", color: "text-white" },
         { icon: <SiRender />, name: "Render", color: "text-purple-400" },
+      ],
+    },
+    {
+      title: "Soft Skills",
+      skills: [
+        { icon: <FaBullseye />, name: "Focus", color: "text-orange-500" },
+        { icon: <FaBrain />, name: "Quick Learner", color: "text-white" },
+        { icon: <FaSyncAlt />, name: "Adaptability", color: "text-white" },
+        { icon: <FaPuzzlePiece />, name: "Problem-Solving", color: "text-purple-400" },
       ],
     },
   ];

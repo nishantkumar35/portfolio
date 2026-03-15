@@ -19,6 +19,7 @@ export default function About() {
       duration: "2020",
       institution: "Utkramit M.S. Babhangama, Bihar",
       icon: "🎓",
+      percentage: "64%",
       color: "from-blue-400 to-cyan-500",
     },
     {
@@ -26,12 +27,14 @@ export default function About() {
       duration: "2021 - 2023",
       institution: "M.S. College Manjhaul, Bihar",
       icon: "📚",
+      percentage: "60%",
       color: "from-purple-400 to-pink-500",
     },
     {
       title: "BACHELOR OF TECHNOLOGY: COMPUTER SCIENCE & ENGINEERING",
       duration: "2023 - 2027",
       institution: "Lovely Professional University, Punjab",
+      cgpa: "7/10",
       icon: "💻",
       color: "from-green-400 to-emerald-500",
     },
@@ -146,10 +149,10 @@ export default function About() {
                   {[
                     "React",
                     "Node.js",
+                    "express.js",
                     "MongoDB",
-                    "Tailwind",
+                    "Next.js",
                     "Figma",
-                    "JavaScript",
                   ].map((skill, index) => (
                     <span
                       key={skill}
@@ -224,6 +227,12 @@ export default function About() {
                               <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse"></div>
                               <p className="text-sm font-semibold text-gray-300 group-hover:text-white transition-colors duration-300">
                                 {item.duration}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2 mt-2">
+                              <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
+                              <p className="text-sm font-semibold text-gray-300 group-hover:text-white transition-colors duration-300">
+                                {item.percentage? `Percentage: ${item.percentage}` : `CGPA: ${item.cgpa}`}
                               </p>
                             </div>
                             <p className="italic text-gray-400 mt-2 group-hover:text-gray-300 transition-colors duration-300">

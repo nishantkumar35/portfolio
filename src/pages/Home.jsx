@@ -25,6 +25,8 @@ export default function Home() {
     { to: "about", label: "About" },
     { to: "skills", label: "Skill" },
     { to: "projects", label: "Projects" },
+    { to: "certifications", label: "Certificates" },
+    { to: "achievements", label: "Achievements" },
     { to: "contact", label: "Contact" },
   ];
 
@@ -127,19 +129,12 @@ export default function Home() {
                 label="Codolio"
               />
             </div>
-            <div className="transform hover:scale-110 transition-all duration-300 hover:-rotate-3">
-              <CustomButton
-                href="https://www.instagram.com/n.i.s.h.a.n.t.2/"
-                icon={FaInstagram}
-                label="Instagram"
-              />
-            </div>
           </div>
 
           <div className="mt-5 flex justify-center lg:justify-start gap-4 animate-fade-in-up animation-delay-2500">
             {/* Enhanced Resume Button */}
             <a
-              href="/Nishant_C.V.pdf"
+              href="/Nishant_general_cv.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="group relative px-8 py-3 text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-full transition-all duration-500 hover:scale-105 hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] overflow-hidden"
