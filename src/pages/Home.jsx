@@ -84,7 +84,6 @@ export default function Home() {
                   UI/UX design
                 </span>
               </TextLoop>{" "}
-              from India.
             </div>
           </div>
 
