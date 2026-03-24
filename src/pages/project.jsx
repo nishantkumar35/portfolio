@@ -62,6 +62,34 @@ export default function Projects() {
       ],
       color: "cyan",
     },
+    {
+      title: "Scalable Microservices Social Hub",
+      description:
+        "A production-ready social media platform built with a distributed microservices architecture. It features secure user authentication, post management with multimedia support, real-time search indexing, and a centralized API Gateway, all synchronized via RabbitMQ and containerized for high availability.",
+      github: "https://github.com/nishantkumar35/micro-service-social-media",
+      demo: "#",
+      image:"https://i.ibb.co/DPMLwvhs/Screenshot-2026-03-24-205138.png",
+      technologies: [
+        "React",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Redis",
+        "RabbitMQ (amqplib)",
+        "Tailwind CSS",
+        "Cloudinary",
+        "API Gateway (express-http-proxy)",
+        "JWT (jsonwebtoken)",
+        "Argon2",
+        "Joi (Validation)",
+        "Multer",
+        "Axios",
+        "Winston (Logging)",
+        "Helmet (Security)",
+        "Express Rate Limit",
+      ],
+      color: "indigo",
+    },
   ];
 
   const colorClasses = {
@@ -85,6 +113,13 @@ export default function Projects() {
       text: "text-cyan-400",
       button: "bg-cyan-500 hover:bg-cyan-600",
       outline: "border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10",
+    },
+    indigo: {
+      border: "border-indigo-500/30 hover:border-indigo-500/60",
+      bg: "bg-indigo-500/5 hover:bg-indigo-500/10",
+      text: "text-indigo-400",
+      button: "bg-indigo-500 hover:bg-indigo-600",
+      outline: "border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10",
     },
   };
 
