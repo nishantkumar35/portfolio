@@ -6,23 +6,6 @@ export default function Projects() {
 
   const projects = [
     {
-      title: "Event Photography & Videography Website",
-      description:
-        "A professional event photography and videography website developed for a small business. Features a dynamic portfolio gallery, service showcase, and client-friendly contact section.",
-      github: "https://github.com/nishantkumar35/Aarsh_wedding_videography",
-      demo: "https://aarsh-wedding-videography.vercel.app",
-      image: "https://i.ibb.co/XrPG9mKK/Screenshot-2025-08-16-231710.png",
-      technologies: [
-        "React",
-        "Node.js",
-        "Express",
-        "MongoDB",
-        "Tailwind",
-        "Cloudinary",
-      ],
-      color: "purple",
-    },
-    {
       title: "PiggyPal - Personal Finance Dashboard",
       description:
         "A modern personal finance management app that helps users track incomes, savings, expenses, wishes, loans, and tasks.",

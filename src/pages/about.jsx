@@ -219,7 +219,7 @@ export default function About() {
                           </span>
                           <div className="flex-1">
                             <h3
-                              className={`font-bold text-md lg:text-lg px-2 bg-gradient-to-r ${item.color} bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300`}
+                              className={`font-bold text-sm lg:text-lg px-2 bg-gradient-to-r ${item.color} bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300`}
                             >
                               {item.title}
                             </h3>
@@ -235,7 +235,7 @@ export default function About() {
                                 {item.percentage? `Percentage: ${item.percentage}` : `CGPA: ${item.cgpa}`}
                               </p>
                             </div>
-                            <p className="italic text-gray-400 mt-2 group-hover:text-gray-300 transition-colors duration-300">
+                            <p className="italic text-[15px] text-gray-400 mt-2 group-hover:text-gray-300 transition-colors duration-300">
                               {item.institution}
                             </p>
                           </div>

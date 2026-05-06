@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-/* ---------------- Certificates ---------------- */
 
 const certs = [
   {
@@ -29,189 +28,216 @@ const certs = [
     link: "https://www.hackerrank.com/certificates/ebb60b7e0426",
     description:
       "Validated SQL knowledge including joins, filtering, relational queries and database basics.",
-  }
+  },
 ];
 
-/* ---------------- Card Positions ---------------- */
-
-const SIZES = {
-  "-1": { scale: 0.8, opacity: 0.6 },
-  "0": { scale: 1, opacity: 1 },
-  "1": { scale: 0.8, opacity: 0.6 },
-};
-
-function getSlots(active, total) {
-  return [-1, 0, 1].map((pos) => ({
-    idx: (active + pos + total) % total,
-    pos,
-  }));
-}
-
-/* ---------------- Card ---------------- */
-
-function CertCard({ cert, pos, onClick }) {
-  const { scale, opacity } = SIZES[String(pos)];
-  const isCenter = pos === 0;
-
-  return (
-    <div
-      onClick={onClick}
-      style={{
-        transform: `translateX(${pos * 260}px) scale(${scale})`,
-        opacity,
-        zIndex: isCenter ? 10 : 5,
-      }}
-      className="absolute transition-all duration-500 cursor-pointer"
-    >
-      <div className="w-[340px] md:w-[420px] rounded-2xl overflow-hidden shadow-2xl border border-purple-500/30 bg-[#0b061c]">
-
-        {/* Image */}
-        <div className="relative">
-          <img
-            src={cert.image}
-            alt={cert.title}
-            className="w-full h-[220px] object-cover"
-          />
-
-          {/* overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b061c] via-[#0b061c]/70 to-transparent" />
-        </div>
-
-        {/* Content */}
-        <div className="p-5">
-
-          <h3 className="text-white text-lg font-semibold mb-1">
-            {cert.title}
-          </h3>
-
-          <p className="text-purple-300 text-sm mb-2">
-            {cert.platform}
-          </p>
-
-          <p className="text-gray-300 text-sm mb-4">
-            {cert.description}
-          </p>
-
-          <div className="flex justify-between items-center">
-
-            <span className="text-xs text-gray-400">
-              {cert.date}
-            </span>
-
-            <a
-              href={cert.link}
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 hover:bg-purple-500/40 transition"
-            >
-              View Certificate
-            </a>
-
-          </div>
-
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ---------------- Main Carousel ---------------- */
-
 export default function CertCarousel() {
-
   const [active, setActive] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef(null);
   const n = certs.length;
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const prev = () => setActive((a) => (a - 1 + n) % n);
   const next = () => setActive((a) => (a + 1) % n);
-
-  /* autoplay */
 
   useEffect(() => {
     const t = setInterval(next, 5000);
     return () => clearInterval(t);
   }, []);
 
-  const slots = getSlots(active, n);
+  // Touch swipe support
+  const touchStartX = useRef(null);
+  const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? next() : prev();
+    touchStartX.current = null;
+  };
 
   return (
-    <section>
-
-      <div className="max-w-6xl mx-auto px-6">
+    <section style={{ overflow: "hidden" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
 
         {/* Header */}
-
-        <div className="text-center mb-16">
-
-          <h1 className="text-4xl md:text-5xl text-white font-bold mb-4">
+        <div style={{ textAlign: "center", marginBottom: 56 }}>
+          <h1 style={{ fontSize: "clamp(28px,5vw,48px)", fontWeight: 700, color: "#fff", marginBottom: 12 }}>
             Certificates
           </h1>
-
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            A selection of certifications demonstrating my skills in
-            full-stack development and programming.
+          <p style={{ color: "#9ca3af", maxWidth: 520, margin: "0 auto", fontSize: 15, lineHeight: 1.6 }}>
+            A selection of certifications demonstrating my skills in full-stack development and programming.
           </p>
-
         </div>
 
-        {/* Carousel */}
-
-        <div className="relative flex items-center justify-center h-[360px]">
-
-          {/* prev */}
-
-          <button
-            onClick={prev}
-            className="absolute left-0 md:left-[-40px] z-20 w-10 h-10 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 text-xl flex items-center justify-center hover:bg-purple-500/40"
+        {/* ── MOBILE: single card + swipe ── */}
+        {isMobile ? (
+          <div
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            style={{ position: "relative" }}
           >
-            <ChevronLeft size={21} />
-          </button>
+            <MobileCard cert={certs[active]} />
 
-          {/* next */}
+            {/* nav buttons */}
+            <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 20 }}>
+              <NavBtn onClick={prev}><ChevronLeft size={18} /></NavBtn>
+              <NavBtn onClick={next}><ChevronRight size={18} /></NavBtn>
+            </div>
+          </div>
+        ) : (
+          /* ── DESKTOP: 3-card fan ── */
+          <DesktopCarousel certs={certs} active={active} prev={prev} next={next} setActive={setActive} />
+        )}
 
-          <button
-            onClick={next}
-            className="absolute right-0 md:right-[-40px] z-20 w-10 h-10 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 text-xl flex items-center justify-center hover:bg-purple-500/40"
-          >
-            <ChevronRight size={21} />
-          </button>
-
-          {/* cards */}
-
-          {slots.map(({ idx, pos }) => (
-            <CertCard
-              key={idx}
-              cert={certs[idx]}
-              pos={pos}
-              onClick={() => {
-                if (pos === -1) prev();
-                if (pos === 1) next();
-              }}
-            />
-          ))}
-
-        </div>
-
-        {/* indicators */}
-
-        <div className="flex justify-center mt-10 gap-3">
-
+        {/* Indicators */}
+        <div style={{ display: "flex", justifyContent: "center", gap: 10, marginTop: 28 }}>
           {certs.map((_, i) => (
             <button
               key={i}
               onClick={() => setActive(i)}
-              className={`h-2 rounded-full transition-all ${
-                i === active
-                  ? "w-8 bg-purple-400"
-                  : "w-2 bg-gray-500"
-              }`}
+              style={{
+                height: 7,
+                width: i === active ? 28 : 7,
+                borderRadius: 99,
+                background: i === active ? "#a855f7" : "#374151",
+                border: "none",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                padding: 0,
+              }}
             />
           ))}
-
         </div>
-
       </div>
-
     </section>
+  );
+}
+
+/* ── Mobile: one card, full width ── */
+function MobileCard({ cert }) {
+  return (
+    <div style={{
+      borderRadius: 16,
+      overflow: "hidden",
+      border: "1px solid rgba(168,85,247,0.3)",
+      background: "#0b061c",
+      boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+      width: "100%",
+    }}>
+      <div style={{ position: "relative" }}>
+        <img src={cert.image} alt={cert.title}
+          style={{ width: "100%", height: 200, objectFit: "cover", display: "block" }} />
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(to bottom, transparent 30%, #0b061c 100%)"
+        }} />
+      </div>
+      <div style={{ padding: "16px 20px 20px" }}>
+        <h3 style={{ color: "#fff", fontSize: 17, fontWeight: 600, marginBottom: 4 }}>{cert.title}</h3>
+        <p style={{ color: "#c084fc", fontSize: 13, marginBottom: 8 }}>{cert.platform}</p>
+        <p style={{ color: "#d1d5db", fontSize: 13, lineHeight: 1.6, marginBottom: 16 }}>{cert.description}</p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span style={{ color: "#9ca3af", fontSize: 12 }}>{cert.date}</span>
+          <a href={cert.link} target="_blank" rel="noreferrer" style={{
+            fontSize: 12, padding: "5px 14px", borderRadius: 99,
+            background: "rgba(168,85,247,0.15)", border: "1px solid rgba(168,85,247,0.4)",
+            color: "#c084fc", textDecoration: "none",
+          }}>View Certificate</a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Desktop: 3-up carousel ── */
+function DesktopCarousel({ certs, active, prev, next, setActive }) {
+  const n = certs.length;
+  const slots = [-1, 0, 1].map((pos) => ({ idx: (active + pos + n) % n, pos }));
+
+  return (
+    <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", height: 400 }}>
+      <NavBtn onClick={prev} style={{ position: "absolute", left: 0, zIndex: 20 }}>
+        <ChevronLeft size={20} />
+      </NavBtn>
+      <NavBtn onClick={next} style={{ position: "absolute", right: 0, zIndex: 20 }}>
+        <ChevronRight size={20} />
+      </NavBtn>
+
+      {slots.map(({ idx, pos }) => {
+        const isCenter = pos === 0;
+        return (
+          <div
+            key={idx}
+            onClick={() => { if (pos === -1) prev(); if (pos === 1) next(); }}
+            style={{
+              position: "absolute",
+              transform: `translateX(${pos * 300}px) scale(${isCenter ? 1 : 0.8})`,
+              opacity: isCenter ? 1 : 0.55,
+              zIndex: isCenter ? 10 : 5,
+              transition: "all 0.5s cubic-bezier(0.4,0,0.2,1)",
+              cursor: isCenter ? "default" : "pointer",
+              width: 400,
+            }}
+          >
+            <div style={{
+              borderRadius: 16, overflow: "hidden",
+              border: "1px solid rgba(168,85,247,0.3)",
+              background: "#0b061c",
+              boxShadow: isCenter ? "0 24px 80px rgba(0,0,0,0.6)" : "none",
+            }}>
+              <div style={{ position: "relative" }}>
+                <img src={certs[idx].image} alt={certs[idx].title}
+                  style={{ width: "100%", height: 220, objectFit: "cover", display: "block" }} />
+                <div style={{
+                  position: "absolute", inset: 0,
+                  background: "linear-gradient(to bottom, transparent 30%, #0b061c 100%)"
+                }} />
+              </div>
+              <div style={{ padding: "16px 20px 20px" }}>
+                <h3 style={{ color: "#fff", fontSize: 17, fontWeight: 600, marginBottom: 4 }}>{certs[idx].title}</h3>
+                <p style={{ color: "#c084fc", fontSize: 13, marginBottom: 8 }}>{certs[idx].platform}</p>
+                <p style={{ color: "#d1d5db", fontSize: 13, lineHeight: 1.6, marginBottom: 16 }}>{certs[idx].description}</p>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ color: "#9ca3af", fontSize: 12 }}>{certs[idx].date}</span>
+                  <a href={certs[idx].link} target="_blank" rel="noreferrer" style={{
+                    fontSize: 12, padding: "5px 14px", borderRadius: 99,
+                    background: "rgba(168,85,247,0.15)", border: "1px solid rgba(168,85,247,0.4)",
+                    color: "#c084fc", textDecoration: "none",
+                  }}>View Certificate</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── Reusable nav button ── */
+function NavBtn({ onClick, children, style = {} }) {
+  return (
+    <button onClick={onClick} style={{
+      width: 40, height: 40, borderRadius: "50%",
+      background: "rgba(168,85,247,0.15)",
+      border: "1px solid rgba(168,85,247,0.4)",
+      color: "#c084fc", cursor: "pointer",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      transition: "background 0.2s",
+      flexShrink: 0,
+      ...style,
+    }}
+      onMouseEnter={e => e.currentTarget.style.background = "rgba(168,85,247,0.35)"}
+      onMouseLeave={e => e.currentTarget.style.background = "rgba(168,85,247,0.15)"}
+    >
+      {children}
+    </button>
   );
 }

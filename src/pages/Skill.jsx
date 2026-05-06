@@ -22,7 +22,8 @@ import {
   SiFramer,
   SiNextdotjs,
   SiJsonwebtokens,
-  SiPrisma
+  SiPrisma,
+  SiRedis
 } from "react-icons/si";
 import { FaBullseye, FaBrain, FaSyncAlt, FaPuzzlePiece } from "react-icons/fa";
 import { FaJava, FaLock } from "react-icons/fa";
@@ -70,6 +71,7 @@ export default function Skills() {
         { icon: <SiMysql />, name: "MySQL", color: "text-blue-400" },
         { icon: <SiMongodb />, name: "MongoDB", color: "text-green-500" },
         { icon: <SiPrisma />, name: "Prisma", color: "text-purple-500" },
+        { icon: <SiRedis />, name: "Redis", color: "text-red-500" },
       ],
     },
     {
@@ -180,13 +182,13 @@ export default function Skills() {
         >
           <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50 text-center">
             <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent mb-2">
-              17+
+              25+
             </div>
             <p className="text-gray-400">Development Tools</p>
           </div>
           <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50 text-center">
             <div className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent mb-2">
-              6
+              5
             </div>
             <p className="text-gray-400">Programming Languages</p>
           </div>
