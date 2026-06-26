@@ -1,263 +1,572 @@
-import React, { useState, useEffect } from "react";
-import { TextEffect } from "../../components/motion-primitives/text-effect";
-import { TextLoop } from "../../components/motion-primitives/text-loop";
-import CustomNavLink from "../comps/CustomNavLink";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { Link } from "react-scroll";
-import CustomButton from "../comps/CustomButton";
-import { FaLinkedin, FaGithub, FaInstagram } from "react-icons/fa";
+import { FaLinkedin, FaGithub, FaReact, FaNodeJs, FaDocker, FaGitAlt, FaPython } from "react-icons/fa";
+import {
+  SiExpress, SiMongodb, SiPostgresql, SiTailwindcss, SiGithub, SiSpringboot,
+} from "react-icons/si";
 import MorphingPhotoBox from "../comps/MorphingPhotoBox";
-import ScrollIndicator from "../comps/ScrollIndicator";
 
-export default function Home() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+/* ─── Typewriter hook ─── */
+function useTypewriter(text, speed = 55, startDelay = 1600) {
+  const [displayed, setDisplayed] = useState("");
+  const [done, setDone] = useState(false);
+  const [started, setStarted] = useState(false);
 
   useEffect(() => {
-    const updateMousePosition = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
+    const startTimer = setTimeout(() => setStarted(true), startDelay);
+    return () => clearTimeout(startTimer);
+  }, [startDelay]);
 
-    window.addEventListener("mousemove", updateMousePosition);
-    return () => window.removeEventListener("mousemove", updateMousePosition);
-  }, []);
+  useEffect(() => {
+    if (!started) return;
+    if (displayed.length >= text.length) { setDone(true); return; }
+    const t = setTimeout(() => setDisplayed(text.slice(0, displayed.length + 1)), speed);
+    return () => clearTimeout(t);
+  }, [displayed, started, text, speed]);
 
-  const navLinks = [
-    { to: "home", label: "Home" },
-    { to: "about", label: "About" },
-    { to: "skills", label: "Skill" },
-    { to: "projects", label: "Projects" },
-    { to: "certifications", label: "Certificates" },
-    { to: "achievements", label: "Achievements" },
-    { to: "contact", label: "Contact" },
-  ];
+  return { displayed, done };
+}
+
+/* ─── Tech icon orbit data ─── */
+const techIcons = [
+  { Icon: FaReact,       color: "#61DAFB", label: "React",       size: 22 },
+  { Icon: FaNodeJs,      color: "#68A063", label: "Node.js",     size: 22 },
+  { Icon: SiExpress,     color: "#2563EB", label: "Express.js",  size: 20 },
+  { Icon: SiSpringboot,  color: "#6DB33F", label: "Spring Boot", size: 20 },
+  { Icon: SiMongodb,     color: "#47A248", label: "MongoDB",     size: 20 },
+  { Icon: SiPostgresql,  color: "#336791", label: "PostgreSQL",  size: 20 },
+  { Icon: FaDocker,      color: "#2496ED", label: "Docker",      size: 22 },
+  { Icon: FaGitAlt,      color: "#F05032", label: "Git",         size: 20 },
+  { Icon: SiGithub,      color: "#1E293B", label: "GitHub",      size: 20 },
+  { Icon: SiTailwindcss, color: "#06B6D4", label: "Tailwind",    size: 20 },
+];
+
+/* ─── Single orbiting icon ─── */
+function OrbitIcon({ Icon, color, label, size, angle, radius, pause }) {
+  const [hovered, setHovered] = useState(false);
+  const [tooltip, setTooltip] = useState(false);
+
+  const rad = (angle * Math.PI) / 180;
+  const x = Math.cos(rad) * radius;
+  const y = Math.sin(rad) * radius;
 
   return (
-    <div className="lg:py-60 font-mono flex flex-col justify-center items-center w-screen sm:h-screen relative overflow-hidden">
-      {/* Animated Background */}
-      <div>
-        {/* Floating orbs */}
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/4 right-3/4 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-cyan-500/20 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
+    <motion.div
+      animate={{ x, y }}
+      style={{ position: "absolute", top: "50%", left: "50%", marginTop: -18, marginLeft: -18, zIndex: hovered ? 50 : 5 }}
+      onHoverStart={() => { setHovered(true); setTooltip(true); }}
+      onHoverEnd={() => { setHovered(false); setTooltip(false); }}
+    >
+      <motion.div
+        whileHover={{ scale: 1.25 }}
+        style={{
+          width: 36,
+          height: 36,
+          borderRadius: "50%",
+          background: "rgba(255,255,255,0.92)",
+          border: `1.5px solid ${color}33`,
+          boxShadow: hovered
+            ? `0 4px 20px ${color}40, 0 0 0 4px ${color}18`
+            : "0 2px 10px rgba(37,99,235,0.10)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "default",
+          transition: "box-shadow 0.3s",
+          position: "relative",
+        }}
+      >
+        <Icon style={{ color, fontSize: size }} />
+        {tooltip && (
+          <motion.div
+            initial={{ opacity: 0, y: 4, scale: 0.92 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: "absolute",
+              top: -34,
+              left: "50%",
+              transform: "translateX(-50%)",
+              background: "#1E293B",
+              color: "white",
+              fontSize: 11,
+              fontWeight: 600,
+              padding: "3px 9px",
+              borderRadius: 6,
+              whiteSpace: "nowrap",
+              pointerEvents: "none",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+              zIndex: 10,
+            }}
+          >
+            {label}
+          </motion.div>
+        )}
+      </motion.div>
+    </motion.div>
+  );
+}
 
-        {/* Mouse follower gradient */}
+/* ─── Main Hero ─── */
+export default function Home() {
+  const [orbitAngle, setOrbitAngle] = useState(0);
+  const [pauseOrbit, setPauseOrbit] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const heroRef = useRef(null);
+  const rafRef = useRef(null);
+  const lastTime = useRef(null);
+
+  const { displayed, done } = useTypewriter("Full Stack Developer", 60, 1600);
+
+  /* Orbit animation via rAF */
+  useEffect(() => {
+    const tick = (ts) => {
+      if (!lastTime.current) lastTime.current = ts;
+      const delta = ts - lastTime.current;
+      lastTime.current = ts;
+      if (!pauseOrbit) {
+        setOrbitAngle((a) => (a + delta * 0.018) % 360);
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [pauseOrbit]);
+
+  /* Parallax */
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!heroRef.current) return;
+      const rect = heroRef.current.getBoundingClientRect();
+      setMousePos({
+        x: ((e.clientX - rect.left) / rect.width  - 0.5) * 20,
+        y: ((e.clientY - rect.top)  / rect.height - 0.5) * 14,
+      });
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
+  const ORBIT_RADIUS_LG = 170;
+  const ORBIT_RADIUS_SM = 130;
+
+  return (
+    <section
+      ref={heroRef}
+      id="home-section"
+      aria-label="Hero section"
+      style={{
+        minHeight: "100vh",
+        paddingTop: 80,
+        display: "flex",
+        alignItems: "center",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1280,
+          margin: "0 auto",
+          padding: "40px 24px 60px",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 0,
+        }}
+      >
+        {/* ── Top badge ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          style={{ marginBottom: 40 }}
+        >
+          <span className="section-tag">
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22C55E", display: "inline-block" }} />
+            Available for opportunities
+          </span>
+        </motion.div>
+
+        {/* ── Two-column layout ── */}
         <div
-          className="absolute w-96 h-96 bg-gradient-radial from-purple-500/20 via-blue-500/10 to-transparent rounded-full blur-3xl pointer-events-none"
           style={{
-            transform: `translate(${mousePosition.x - 192}px, ${
-              mousePosition.y - 192
-            }px)`,
-            transition: "transform 0.3s ease-out",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 80,
+            width: "100%",
+            flexWrap: "wrap",
           }}
-        ></div>
-      </div>
-
-      {/* Main Content */}
-      <div className="relative z-10 flex flex-col mt-20 lg:flex-row items-center lg:items-start justify-center w-full lg:w-[90%] gap-10 px-4">
-        {/* Text Content */}
-        <div className="w-full lg:w-1/2 text-center lg:text-left">
-          <div className="px-2 pt-2 flex flex-col lg:text-2xl text-xl leading-tight text-gray-300 animate-fade-in-up">
-            <TextEffect per="char" delay={0.5}>
+        >
+          {/* LEFT: Text */}
+          <div style={{ flex: "1 1 340px", maxWidth: 520 }}>
+            {/* Greeting */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+              style={{
+                fontSize: 17,
+                color: "#64748B",
+                fontWeight: 500,
+                marginBottom: 12,
+                letterSpacing: "0.01em",
+              }}
+            >
               Hello, I'm
-            </TextEffect>
-          </div>
+            </motion.p>
 
-          <div className="px-2 pt-2 lg:text-5xl text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 bg-clip-text text-transparent animate-fade-in-up animation-delay-500">
-            <TextEffect per="char" delay={1.5}>
-              Nishant Kumar
-            </TextEffect>
-          </div>
+            {/* Name */}
+            <motion.h1
+              initial={{ opacity: 0, y: 24, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 1.2, duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
+              style={{
+                fontSize: "clamp(38px, 5.5vw, 68px)",
+                fontWeight: 900,
+                letterSpacing: "-0.04em",
+                lineHeight: 1.05,
+                color: "#1E293B",
+                marginBottom: 18,
+              }}
+            >
+              NISHANT{" "}
+              <span className="gradient-text">KUMAR</span>
+            </motion.h1>
 
-          <div className="px-2 pt-2 tracking-widest text-gray-300 lg:text-lg text-sm animate-fade-in-up animation-delay-1000">
-            <div className="inline-block">
-              I'm passionate about{" "}
-              <TextLoop className="inline-block overflow-y-clip">
-                <span className="bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent font-bold border-b-2 border-red-400">
-                  frontend development
-                </span>
-                <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent font-bold border-b-2 border-blue-400">
-                  backend development
-                </span>
-                <span className="bg-gradient-to-r from-green-400 to-cyan-500 bg-clip-text text-transparent font-bold border-b-2 border-green-400">
-                  full stack development
-                </span>
-                <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent font-bold border-b-2 border-yellow-400">
-                  UI/UX design
-                </span>
-              </TextLoop>{" "}
-            </div>
-          </div>
+            {/* Subtitle: typewriter */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.55, duration: 0.5 }}
+              style={{
+                fontSize: "clamp(18px, 2.5vw, 26px)",
+                fontWeight: 700,
+                letterSpacing: "-0.02em",
+                marginBottom: 24,
+                minHeight: 36,
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <span className={done ? "gradient-text-animate" : "gradient-text"}>
+                {displayed}
+              </span>
+              {!done && <span className="typewriter-cursor" />}
+            </motion.div>
 
-          <nav className="hidden lg:flex pt-4 gap-4 animate-fade-in-up animation-delay-1500">
-            {navLinks.map(({ to, label }, index) => (
+            {/* Description */}
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.8, duration: 0.7 }}
+              style={{
+                fontSize: 16,
+                color: "#64748B",
+                lineHeight: 1.75,
+                marginBottom: 36,
+                maxWidth: 460,
+              }}
+            >
+              I build scalable, secure, and high-performance full-stack web applications with modern technologies — from pixel-perfect UIs to robust backend systems.
+            </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.0, duration: 0.6 }}
+              style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 32 }}
+            >
               <Link
-                key={to}
-                to={to}
+                to="projects"
                 smooth={true}
                 duration={600}
-                spy={true}
-                offset={-70}
-                activeClass="text-purple-400 font-bold border-b-2 border-purple-400 px-2"
-                className="cursor-pointer text-gray-300 hover:text-purple-400 transition-all duration-300 hover:scale-110 hover:shadow-lg relative group"
-                style={{ animationDelay: `${1500 + index * 100}ms` }}
+                offset={-64}
               >
-                {label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
+                <button className="btn-primary btn-ripple" style={{ cursor: "pointer" }}>
+                  View Projects →
+                </button>
               </Link>
-            ))}
-          </nav>
 
-          <div className="flex mt-5 gap-3 justify-center lg:justify-start animate-fade-in-up animation-delay-2000">
-            <div className="transform hover:scale-110 transition-all duration-300 hover:rotate-3">
-              <CustomButton
-                href="https://www.linkedin.com/in/nishantkumar35/"
-                icon={FaLinkedin}
-                label="LinkedIn"
-              />
-            </div>
-            <div className="transform hover:scale-110 transition-all duration-300 hover:-rotate-3">
-              <CustomButton
-                href="https://github.com/nishantkumar35"
-                icon={FaGithub}
-                label="GitHub"
-              />
-            </div>
-            <div className="transform hover:scale-110 transition-all duration-300 hover:rotate-3">
-              <CustomButton
-                href="https://codolio.com/profile/TZGtOMBe"
-                imageSrc="https://i.ibb.co/Nn1ssp7d/idi-QOXRYwr-logos-removebg-preview.png"
-                label="Codolio"
-              />
-            </div>
-          </div>
+              <a
+                href="/Nishant_general_cv.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline btn-ripple"
+              >
+                Download Resume ↗
+              </a>
 
-          <div className="mt-5 flex justify-center lg:justify-start gap-4 animate-fade-in-up animation-delay-2500">
-            {/* Enhanced Resume Button */}
-            <a
-              href="/Nishant_general_cv.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative px-8 py-3 text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-full transition-all duration-500 hover:scale-105 hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] overflow-hidden"
+              <Link
+                to="contact"
+                smooth={true}
+                duration={600}
+                offset={-64}
+              >
+                <button
+                  className="btn-ripple"
+                  style={{
+                    padding: "12px 24px",
+                    borderRadius: 14,
+                    background: "rgba(124,58,237,0.09)",
+                    border: "1.5px solid rgba(124,58,237,0.22)",
+                    color: "#7C3AED",
+                    fontWeight: 600,
+                    fontSize: 15,
+                    cursor: "pointer",
+                    transition: "all 0.3s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(124,58,237,0.16)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(124,58,237,0.09)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
+                >
+                  Contact Me ✉
+                </button>
+              </Link>
+            </motion.div>
+
+            {/* Social Links */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.2, duration: 0.6 }}
+              style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}
             >
-              <span className="relative z-10 flex items-center gap-2">
-                <span className="animate-spin-slow">✦</span>
-                View Resume
-                <span className="animate-spin-slow animation-delay-1000">
-                  ✦
-                </span>
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </a>
+              {[
+                { href: "https://www.linkedin.com/in/nishantkumar35/", Icon: FaLinkedin, label: "LinkedIn", color: "#0A66C2" },
+                { href: "https://github.com/nishantkumar35", Icon: FaGithub, label: "GitHub", color: "#1E293B" },
+                {
+                  href: "https://codolio.com/profile/TZGtOMBe",
+                  label: "Codolio",
+                  color: "#2563EB",
+                  img: "https://i.ibb.co/Nn1ssp7d/idi-QOXRYwr-logos-removebg-preview.png",
+                },
+              ].map(({ href, Icon, label, color, img }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 7,
+                    padding: "8px 16px",
+                    borderRadius: 10,
+                    background: "rgba(255,255,255,0.78)",
+                    border: "1px solid rgba(37,99,235,0.12)",
+                    color: "#64748B",
+                    fontSize: 14,
+                    fontWeight: 500,
+                    textDecoration: "none",
+                    boxShadow: "0 2px 8px rgba(37,99,235,0.07)",
+                    transition: "all 0.25s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = color;
+                    e.currentTarget.style.borderColor = `${color}44`;
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 6px 18px rgba(37,99,235,0.12)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "#64748B";
+                    e.currentTarget.style.borderColor = "rgba(37,99,235,0.12)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 2px 8px rgba(37,99,235,0.07)";
+                  }}
+                >
+                  {img ? (
+                    <img src={img} alt={label} style={{ width: 18, height: 18, objectFit: "contain" }} />
+                  ) : (
+                    <Icon style={{ fontSize: 18, color: color }} />
+                  )}
+                  {label}
+                </a>
+              ))}
+            </motion.div>
           </div>
+
+          {/* RIGHT: Orbital circle + photo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.88 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.8, duration: 0.9, ease: [0.34, 1.56, 0.64, 1] }}
+            style={{
+              flex: "0 0 auto",
+              position: "relative",
+              width: 380,
+              height: 380,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onMouseEnter={() => setPauseOrbit(true)}
+            onMouseLeave={() => setPauseOrbit(false)}
+          >
+            {/* Glow behind circle */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(37,99,235,0.15) 0%, rgba(124,58,237,0.08) 50%, transparent 70%)",
+                animation: "pulse-glow 3s ease-in-out infinite",
+              }}
+            />
+
+            {/* Ring 1 */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                margin: "auto",
+                width: 340,
+                height: 340,
+                borderRadius: "50%",
+                border: "1.5px solid rgba(37,99,235,0.18)",
+                animation: "orbit-rotate 22s linear infinite",
+              }}
+            />
+            {/* Ring 2 */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                margin: "auto",
+                width: 290,
+                height: 290,
+                borderRadius: "50%",
+                border: "1px solid rgba(124,58,237,0.14)",
+                animation: "orbit-rotate 32s linear infinite reverse",
+              }}
+            />
+            {/* Ring 3 */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                margin: "auto",
+                width: 240,
+                height: 240,
+                borderRadius: "50%",
+                border: "1px dashed rgba(37,99,235,0.10)",
+                animation: "orbit-rotate 18s linear infinite",
+              }}
+            />
+
+            {/* Orbiting tech icons */}
+            <div
+              style={{
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                top: 0,
+                left: 0,
+                zIndex: 20,
+              }}
+            >
+              {techIcons.map((tech, i) => {
+                const angle = orbitAngle + (i / techIcons.length) * 360;
+                const radius = i % 2 === 0 ? ORBIT_RADIUS_LG : ORBIT_RADIUS_SM;
+                return (
+                  <OrbitIcon
+                    key={tech.label}
+                    {...tech}
+                    angle={angle}
+                    radius={radius}
+                    pause={pauseOrbit}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Center: Photo */}
+            <motion.div
+              animate={{ x: mousePos.x * 0.08, y: mousePos.y * 0.08 }}
+              transition={{ type: "spring", stiffness: 100, damping: 18 }}
+              style={{
+                position: "absolute",
+                zIndex: 10,
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                margin: "auto",
+                width: 220,
+                height: 220,
+                borderRadius: "50%",
+                overflow: "visible",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <MorphingPhotoBox photoUrl="https://i.ibb.co/KpQ9pn4L/img.jpg" />
+            </motion.div>
+          </motion.div>
         </div>
 
-        <div className="flex z-50 items-center justify-center animate-fade-in-right animation-delay-1000">
-          <div className="relative">
-            <MorphingPhotoBox photoUrl="https://i.ibb.co/KpQ9pn4L/img.jpg" />
-          </div>
-        </div>
+        {/* ── Scroll indicator ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 3.2, duration: 0.8 }}
+          style={{
+            marginTop: 64,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          <span style={{ fontSize: 12, color: "#94A3B8", fontWeight: 500, letterSpacing: "0.08em" }}>
+            SCROLL TO EXPLORE
+          </span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              width: 24,
+              height: 38,
+              borderRadius: 12,
+              border: "2px solid rgba(37,99,235,0.25)",
+              display: "flex",
+              justifyContent: "center",
+              paddingTop: 5,
+            }}
+          >
+            <div
+              style={{
+                width: 4,
+                height: 10,
+                borderRadius: 2,
+                background: "linear-gradient(to bottom, #2563EB, #7C3AED)",
+              }}
+            />
+          </motion.div>
+        </motion.div>
       </div>
-
-      <div className="relative z-10 flex flex-col items-center mt-20 space-y-1 justify-center animate-bounce-slow animation-delay-3000">
-        <ScrollIndicator />
-      </div>
-
-      {/* Add custom animations to your CSS */}
-      <style jsx>{`
-        @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fade-in-right {
-          from {
-            opacity: 0;
-            transform: translateX(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes grid {
-          0% {
-            transform: translate(0, 0);
-          }
-          100% {
-            transform: translate(50px, 50px);
-          }
-        }
-
-        @keyframes spin-slow {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        @keyframes bounce-slow {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-
-        .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animate-fade-in-right {
-          animation: fade-in-right 0.8s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animate-grid {
-          animation: grid 20s linear infinite;
-        }
-
-        .animate-spin-slow {
-          animation: spin-slow 3s linear infinite;
-        }
-
-        .animate-bounce-slow {
-          animation: bounce-slow 2s ease-in-out infinite;
-        }
-
-        .animation-delay-500 {
-          animation-delay: 0.5s;
-        }
-        .animation-delay-1000 {
-          animation-delay: 1s;
-        }
-        .animation-delay-1500 {
-          animation-delay: 1.5s;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-2500 {
-          animation-delay: 2.5s;
-        }
-        .animation-delay-3000 {
-          animation-delay: 3s;
-        }
-
-        .bg-gradient-radial {
-          background: radial-gradient(var(--tw-gradient-stops));
-        }
-      `}</style>
-    </div>
+    </section>
   );
 }

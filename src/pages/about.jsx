@@ -1,330 +1,393 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useRef, useEffect, useState } from "react";
+import { motion, useInView } from "framer-motion";
 
-export default function About() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+/* ─── Animated counter ─── */
+function AnimatedCounter({ end, suffix = "", duration = 1800 }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
 
   useEffect(() => {
-    const updateMousePosition = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener("mousemove", updateMousePosition);
-    return () => window.removeEventListener("mousemove", updateMousePosition);
-  }, []);
-
-  const educationData = [
-    {
-      title: "High School",
-      duration: "2020",
-      institution: "Utkramit M.S. Babhangama, Bihar",
-      icon: "🎓",
-      percentage: "64%",
-      color: "from-blue-400 to-cyan-500",
-    },
-    {
-      title: "Intermediate",
-      duration: "2021 - 2023",
-      institution: "M.S. College Manjhaul, Bihar",
-      icon: "📚",
-      percentage: "60%",
-      color: "from-purple-400 to-pink-500",
-    },
-    {
-      title: "BACHELOR OF TECHNOLOGY: COMPUTER SCIENCE & ENGINEERING",
-      duration: "2023 - 2027",
-      institution: "Lovely Professional University, Punjab",
-      cgpa: "7/10",
-      icon: "💻",
-      color: "from-green-400 to-emerald-500",
-    },
-  ];
-
-  // Enhanced animation variants
-  const fadeUp = {
-    hidden: { opacity: 0, y: 40 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  };
-
-  const staggerContainer = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.3,
-      },
-    },
-  };
-
-  const scaleIn = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
-  };
+    if (!inView) return;
+    let start = 0;
+    const increment = end / (duration / 16);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) { setCount(end); clearInterval(timer); }
+      else setCount(Math.floor(start));
+    }, 16);
+    return () => clearInterval(timer);
+  }, [inView, end, duration]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Enhanced Animated Background */}
-      <div>
-        {/* Floating geometric shapes */}
-        <div className="absolute top-20 left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl animate-float"></div>
-        <div className="absolute top-1/3 right-20 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl animate-float animation-delay-1000"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-40 h-40 bg-cyan-500/10 rounded-full blur-2xl animate-float animation-delay-2000"></div>
+    <span ref={ref}>
+      {count}{suffix}
+    </span>
+  );
+}
 
-        {/* Interactive mouse follower */}
-        <div
-          className="absolute w-80 h-80 bg-gradient-radial from-purple-500/15 via-blue-500/10 to-transparent rounded-full blur-3xl pointer-events-none"
-          style={{
-            transform: `translate(${mousePosition.x - 160}px, ${
-              mousePosition.y - 160
-            }px)`,
-            transition: "transform 0.5s ease-out",
-          }}
-        ></div>
-      </div>
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.4, 0, 0.2, 1] } },
+};
 
-      <div className="relative z-10">
-        {/* Enhanced Heading */}
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.15 } },
+};
+
+const educationData = [
+  {
+    title: "High School",
+    duration: "2020",
+    institution: "Utkramit M.S. Babhangama, Bihar",
+    metric: "64%",
+    metricLabel: "Score",
+    color: "#2563EB",
+    accent: "rgba(37,99,235,0.08)",
+    icon: "🎓",
+  },
+  {
+    title: "Intermediate (12th)",
+    duration: "2021 – 2023",
+    institution: "M.S. College Manjhaul, Bihar",
+    metric: "60%",
+    metricLabel: "Score",
+    color: "#7C3AED",
+    accent: "rgba(124,58,237,0.08)",
+    icon: "📚",
+  },
+  {
+    title: "B.Tech — Computer Science & Engineering",
+    duration: "2023 – 2027",
+    institution: "Lovely Professional University, Punjab",
+    metric: "7.0",
+    metricLabel: "CGPA",
+    color: "#22C55E",
+    accent: "rgba(34,197,94,0.07)",
+    icon: "💻",
+  },
+];
+
+const stats = [
+  { value: 15,  suffix: "+", label: "Projects Built" },
+  { value: 25,  suffix: "+", label: "Technologies" },
+  { value: 350, suffix: "+", label: "Problems Solved" },
+  { value: 2,   suffix: "+", label: "Years Learning" },
+];
+
+export default function About() {
+  return (
+    <section
+      id="about-section"
+      aria-label="About section"
+      style={{
+        padding: "96px 24px",
+        maxWidth: 1280,
+        margin: "0 auto",
+      }}
+    >
+      {/* Section Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.7 }}
+        style={{ textAlign: "center", marginBottom: 72 }}
+      >
+        <span className="section-tag" style={{ marginBottom: 16, display: "inline-flex" }}>
+          👤 About Me
+        </span>
+        <h2 className="section-heading" style={{ marginBottom: 16 }}>
+          Who I <span>Am</span>
+        </h2>
+        <p className="section-sub" style={{ margin: "0 auto" }}>
+          A passionate Full Stack Developer crafting elegant, high-performance digital experiences.
+        </p>
+      </motion.div>
+
+      {/* Two-column: bio + education */}
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-60px" }}
+        style={{
+          display: "flex",
+          gap: 28,
+          flexWrap: "wrap",
+          alignItems: "flex-start",
+          marginBottom: 60,
+        }}
+      >
+        {/* Left — Bio card */}
         <motion.div
-          initial={{ opacity: 0, y: -50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center mt-20 mb-16"
+          variants={fadeUp}
+          className="clay-card"
+          style={{ flex: "1 1 320px", padding: 36 }}
         >
-          <h1 className="text-4xl p-2 md:text-5xl font-bold font-mono bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 bg-clip-text text-transparent relative">
-            ABOUT ME
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-purple-400 to-cyan-400 rounded-full animate-pulse"></div>
-          </h1>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 14,
+              marginBottom: 24,
+            }}
+          >
+            <div
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 14,
+                background: "linear-gradient(135deg, #2563EB, #7C3AED)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 22,
+                flexShrink: 0,
+                boxShadow: "0 4px 16px rgba(37,99,235,0.25)",
+              }}
+            >
+              👨‍💻
+            </div>
+            <div>
+              <h3
+                style={{
+                  fontWeight: 700,
+                  fontSize: 20,
+                  color: "#1E293B",
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                My Story
+              </h3>
+              <p style={{ color: "#64748B", fontSize: 13, marginTop: 2 }}>
+                Full Stack Developer & UI/UX Enthusiast
+              </p>
+            </div>
+          </div>
+
+          <p
+            style={{
+              color: "#475569",
+              fontSize: 15.5,
+              lineHeight: 1.8,
+              marginBottom: 18,
+            }}
+          >
+            I'm a Full-Stack Developer specializing in the MERN stack, Tailwind CSS, and Figma.
+            I love building modern, responsive, and user-friendly web applications — from designing
+            intuitive interfaces to developing secure, scalable backend systems.
+          </p>
+          <p
+            style={{
+              color: "#475569",
+              fontSize: 15.5,
+              lineHeight: 1.8,
+              marginBottom: 28,
+            }}
+          >
+            My focus is on crafting digital experiences that are functional, efficient, and visually
+            engaging, while continuously learning and adapting to new technologies. Every project is
+            an opportunity to push boundaries and create something amazing.
+          </p>
+
+          {/* Tags */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {["React", "Node.js", "Express.js", "MongoDB", "Next.js", "Figma", "TypeScript", "Redis"].map(
+              (skill) => (
+                <span key={skill} className="tech-badge">
+                  {skill}
+                </span>
+              )
+            )}
+          </div>
+
+          {/* Current Focus */}
+          <div
+            style={{
+              marginTop: 28,
+              padding: 18,
+              borderRadius: 14,
+              background: "rgba(37,99,235,0.05)",
+              border: "1px solid rgba(37,99,235,0.12)",
+            }}
+          >
+            <div style={{ fontWeight: 600, fontSize: 14, color: "#2563EB", marginBottom: 6 }}>
+              🎯 Current Focus
+            </div>
+            <p style={{ color: "#475569", fontSize: 14, lineHeight: 1.6 }}>
+              Building production-grade microservices architectures & exploring cloud-native DevOps practices.
+            </p>
+          </div>
+
+          {/* Career Goal */}
+          <div
+            style={{
+              marginTop: 14,
+              padding: 18,
+              borderRadius: 14,
+              background: "rgba(124,58,237,0.05)",
+              border: "1px solid rgba(124,58,237,0.12)",
+            }}
+          >
+            <div style={{ fontWeight: 600, fontSize: 14, color: "#7C3AED", marginBottom: 6 }}>
+              🚀 Career Goal
+            </div>
+            <p style={{ color: "#475569", fontSize: 14, lineHeight: 1.6 }}>
+              To join a product-first engineering team where I can build impactful, scalable software and grow as a senior full-stack engineer.
+            </p>
+          </div>
         </motion.div>
 
-        <div className="flex flex-col lg:flex-row w-[90%] lg:w-[85%] mx-auto font-mono gap-12">
-          {/* Enhanced Left Section: About Text */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            className="lg:w-1/2 w-full"
+        {/* Right — Education Timeline */}
+        <motion.div
+          variants={fadeUp}
+          className="clay-card"
+          style={{ flex: "1 1 320px", padding: 36 }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 14,
+              marginBottom: 32,
+            }}
           >
-            <motion.div
-              variants={scaleIn}
-              className="bg-gradient-to-br from-slate-800/50 to-purple-900/30 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/20 shadow-2xl hover:shadow-purple-500/20 transition-all duration-500"
+            <div
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 14,
+                background: "linear-gradient(135deg, #2563EB, #06b6d4)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 22,
+                flexShrink: 0,
+                boxShadow: "0 4px 16px rgba(37,99,235,0.25)",
+              }}
             >
-              <motion.div variants={fadeUp} className="mb-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-2xl animate-bounce-slow">
-                    👨‍💻
-                  </div>
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Who I Am
-                  </h2>
-                </div>
-              </motion.div>
+              🎓
+            </div>
+            <div>
+              <h3
+                style={{
+                  fontWeight: 700,
+                  fontSize: 20,
+                  color: "#1E293B",
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                Education Journey
+              </h3>
+              <p style={{ color: "#64748B", fontSize: 13, marginTop: 2 }}>
+                Academic milestones
+              </p>
+            </div>
+          </div>
 
-              <motion.div variants={fadeUp} className="space-y-6">
-                {[
-                  "I'm a Full-Stack Developer & UI/UX Designer specializing in the MERN stack, Tailwind CSS, and Figma. I love building modern, responsive, and user-friendly web applications — from designing intuitive interfaces to developing secure, scalable backend systems.",
-                  "My focus is on crafting digital experiences that are functional, efficient, and visually engaging, while continuously learning and adapting to new technologies. Every project is an opportunity to push boundaries and create something amazing.",
-                ].map((text, i) => (
-                  <motion.p
-                    key={i}
-                    variants={fadeUp}
-                    className="text-gray-300 text-md lg:text-lg leading-relaxed hover:text-white transition-colors duration-300"
-                  >
-                    {text}
-                  </motion.p>
-                ))}
-
-                {/* Skills Tags */}
+          {/* Timeline */}
+          <div style={{ position: "relative", paddingLeft: 48 }}>
+            <div className="timeline-line" />
+            <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+              {educationData.map((item, i) => (
                 <motion.div
+                  key={i}
                   variants={fadeUp}
-                  className="flex flex-wrap gap-2 mt-6"
+                  style={{ position: "relative" }}
                 >
-                  {[
-                    "React",
-                    "Node.js",
-                    "express.js",
-                    "MongoDB",
-                    "Next.js",
-                    "Figma",
-                  ].map((skill, index) => (
-                    <span
-                      key={skill}
-                      className="px-3 py-1 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/30 rounded-full text-sm text-purple-300 hover:border-purple-400 transition-colors duration-300 animate-fade-in"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-
-          {/* Enhanced Right Section: Education Timeline */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            className="lg:w-1/2 w-full"
-          >
-            <motion.div
-              variants={scaleIn}
-              className="bg-gradient-to-br from-slate-800/50 to-blue-900/30 backdrop-blur-sm rounded-2xl p-8 border border-blue-500/20 shadow-2xl hover:shadow-blue-500/20 transition-all duration-500"
-            >
-              <motion.div variants={fadeUp} className="mb-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-2xl animate-pulse">
-                    🎓
-                  </div>
-                  <h2 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                    Education Timeline
-                  </h2>
-                </div>
-              </motion.div>
-
-              <div className="relative">
-                {/* Enhanced Timeline Line */}
-                <div className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 via-purple-500 to-cyan-400 rounded-full shadow-lg shadow-blue-500/50"></div>
-
-                <div className="space-y-8">
-                  {educationData.map((item, index) => (
-                    <motion.div
-                      key={index}
-                      variants={fadeUp}
-                      className="relative group"
-                    >
-                      {/* Enhanced Timeline Dot */}
-                      <div className="absolute left-5.5 top-2 w-6 h-6 bg-gradient-to-br from-white to-gray-200 border-4 border-transparent bg-clip-padding rounded-full shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <div className="timeline-dot" />
+                  <div
+                    style={{
+                      padding: "16px 20px",
+                      background: item.accent,
+                      border: `1px solid ${item.color}22`,
+                      borderRadius: 14,
+                      transition: "all 0.3s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateX(4px)";
+                      e.currentTarget.style.boxShadow = `0 4px 16px ${item.color}18`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateX(0)";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                      <span style={{ fontSize: 20, flexShrink: 0 }}>{item.icon}</span>
+                      <div style={{ flex: 1 }}>
                         <div
-                          className={`absolute inset-1 bg-gradient-to-r ${item.color} rounded-full animate-pulse`}
-                        ></div>
-                      </div>
-
-                      {/* Enhanced Content Card */}
-                      <div className="ml-16 bg-gradient-to-r from-slate-700/30 to-slate-600/30 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:transform hover:scale-105 group">
-                        <div className="flex items-start gap-3">
-                          <span
-                            className="text-2xl animate-bounce-slow"
-                            style={{ animationDelay: `${index * 0.5}s` }}
-                          >
-                            {item.icon}
+                          style={{
+                            fontWeight: 700,
+                            fontSize: 14,
+                            color: item.color,
+                            letterSpacing: "-0.01em",
+                            lineHeight: 1.3,
+                            marginBottom: 4,
+                          }}
+                        >
+                          {item.title}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 13,
+                            color: "#64748B",
+                            marginBottom: 3,
+                            fontStyle: "italic",
+                          }}
+                        >
+                          {item.institution}
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: 12,
+                            fontSize: 12,
+                            fontWeight: 600,
+                          }}
+                        >
+                          <span style={{ color: "#94A3B8" }}>📅 {item.duration}</span>
+                          <span style={{ color: item.color }}>
+                            {item.metricLabel}: {item.metric}
                           </span>
-                          <div className="flex-1">
-                            <h3
-                              className={`font-bold text-sm lg:text-lg px-2 bg-gradient-to-r ${item.color} bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300`}
-                            >
-                              {item.title}
-                            </h3>
-                            <div className="flex items-center gap-2 mt-2">
-                              <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse"></div>
-                              <p className="text-sm font-semibold text-gray-300 group-hover:text-white transition-colors duration-300">
-                                {item.duration}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2 mt-2">
-                              <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
-                              <p className="text-sm font-semibold text-gray-300 group-hover:text-white transition-colors duration-300">
-                                {item.percentage? `Percentage: ${item.percentage}` : `CGPA: ${item.cgpa}`}
-                              </p>
-                            </div>
-                            <p className="italic text-[15px] text-gray-400 mt-2 group-hover:text-gray-300 transition-colors duration-300">
-                              {item.institution}
-                            </p>
-                          </div>
                         </div>
                       </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+
+      {/* Stats Row */}
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-60px" }}
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: 20,
+        }}
+      >
+        {stats.map(({ value, suffix, label }) => (
+          <motion.div
+            key={label}
+            variants={fadeUp}
+            className="stat-card"
+          >
+            <div className="stat-number">
+              <AnimatedCounter end={value} suffix={suffix} />
+            </div>
+            <div className="stat-label">{label}</div>
           </motion.div>
-        </div>
-      </div>
-
-      {/* Enhanced CSS Animations */}
-      <style jsx>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-20px) rotate(180deg);
-          }
-        }
-
-        @keyframes grid-slow {
-          0% {
-            transform: translate(0, 0);
-          }
-          100% {
-            transform: translate(60px, 60px);
-          }
-        }
-
-        @keyframes bounce-slow {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-8px);
-          }
-        }
-
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-
-        .animate-grid-slow {
-          animation: grid-slow 25s linear infinite;
-        }
-
-        .animate-bounce-slow {
-          animation: bounce-slow 3s ease-in-out infinite;
-        }
-
-        .animate-fade-in {
-          animation: fade-in 0.6s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animation-delay-1000 {
-          animation-delay: 1s;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-
-        .bg-gradient-radial {
-          background: radial-gradient(var(--tw-gradient-stops));
-        }
-
-        /* Hover effects for cards */
-        .group:hover .group-hover\\:scale-105 {
-          transform: scale(1.05);
-        }
-      `}</style>
-    </div>
+        ))}
+      </motion.div>
+    </section>
   );
 }

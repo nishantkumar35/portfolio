@@ -1,228 +1,372 @@
 import React, { useState } from "react";
-import { ExternalLink, Github } from "lucide-react";
+import { motion } from "framer-motion";
+import { ExternalLink, Github, Star, Zap, Shield } from "lucide-react";
 
-export default function Projects() {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+const projects = [
+  {
+    title: "PiggyPal",
+    subtitle: "Personal Finance Dashboard",
+    description:
+      "A modern personal finance management app that helps users track incomes, savings, expenses, wishes, loans, and tasks — all in one elegant dashboard.",
+    github: "https://github.com/nishantkumar35/piggypal",
+    demo: "https://piggypal-theta.vercel.app/",
+    image: "https://i.ibb.co/hRrtrv3S/Screenshot-2026-03-15-222427.png",
+    technologies: ["React", "Node.js", "MongoDB", "Express", "Tailwind", "Framer Motion", "JWT"],
+    color: "#2563EB",
+    accent: "rgba(37,99,235,0.08)",
+    accentBorder: "rgba(37,99,235,0.18)",
+    metrics: [
+      { icon: <Star size={13} />, text: "Full CRUD Finance Tracker" },
+      { icon: <Zap size={13} />,  text: "Real-time Dashboard" },
+      { icon: <Shield size={13} />,text: "JWT Auth" },
+    ],
+  },
+  {
+    title: "DocMatch",
+    subtitle: "AI Healthcare System",
+    description:
+      "An advanced healthcare platform leveraging AI to match patients with specialists based on symptoms, with Google Auth, multimedia uploads, and ML-powered recommendations.",
+    github: "https://github.com/nishantkumar35/doctor_reviews_and_recommendations",
+    demo: "https://doctor-reviews-and-recommendations.vercel.app/",
+    image: "https://i.ibb.co/HTSPMVpJ/Screenshot-2026-03-15-222643.png",
+    technologies: ["React", "Node.js", "MongoDB", "Express", "Tailwind", "Google Auth", "Transformers.js", "Cloudinary", "JWT"],
+    color: "#7C3AED",
+    accent: "rgba(124,58,237,0.08)",
+    accentBorder: "rgba(124,58,237,0.18)",
+    metrics: [
+      { icon: <Star size={13} />,   text: "AI Symptom Matching" },
+      { icon: <Zap size={13} />,    text: "Google OAuth" },
+      { icon: <Shield size={13} />, text: "Cloudinary Storage" },
+    ],
+  },
+  {
+    title: "Social Microservices Hub",
+    subtitle: "Scalable Social Media Platform",
+    description:
+      "A production-ready social media platform built with a distributed microservices architecture — secure auth, post management, real-time search, API Gateway, and RabbitMQ messaging.",
+    github: "https://github.com/nishantkumar35/micro-service-social-media",
+    demo: "#",
+    image: "https://i.ibb.co/DPMLwvhs/Screenshot-2026-03-24-205138.png",
+    technologies: ["React", "Node.js", "Express", "MongoDB", "Redis", "RabbitMQ", "Tailwind", "JWT", "Argon2", "Winston", "Helmet"],
+    color: "#0EA5E9",
+    accent: "rgba(14,165,233,0.08)",
+    accentBorder: "rgba(14,165,233,0.18)",
+    metrics: [
+      { icon: <Star size={13} />,   text: "Microservices Architecture" },
+      { icon: <Zap size={13} />,    text: "RabbitMQ Messaging" },
+      { icon: <Shield size={13} />, text: "Rate Limiting + Helmet" },
+    ],
+  },
+];
 
-  const projects = [
-    {
-      title: "PiggyPal - Personal Finance Dashboard",
-      description:
-        "A modern personal finance management app that helps users track incomes, savings, expenses, wishes, loans, and tasks.",
-      github: "https://github.com/nishantkumar35/piggypal",
-      demo: "https://piggypal-theta.vercel.app/",
-      image: "https://i.ibb.co/hRrtrv3S/Screenshot-2026-03-15-222427.png",
-      technologies: [
-        "React",
-        "Node.js",
-        "MongoDB",
-        "Express",
-        "Tailwind",
-        "Framer Motion",
-        "JWT",
-      ],
-      color: "blue",
-    },
-    {
-      title: "DocMatch - AI Healthcare System",
-      description:
-        "An advanced healthcare platform leveraging AI to match patients with specialists based on symptoms.",
-      github:
-        "https://github.com/nishantkumar35/doctor_reviews_and_recommendations",
-      demo: "https://doctor-reviews-and-recommendations.vercel.app/",
-      image: "https://i.ibb.co/HTSPMVpJ/Screenshot-2026-03-15-222643.png",
-      technologies: [
-        "React",
-        "Node.js",
-        "MongoDB",
-        "Express",
-        "Tailwind",
-        "Google Auth",
-        "Transformers.js",
-        "Cloudinary",
-        "Framer Motion",
-        "JWT",
-      ],
-      color: "cyan",
-    },
-    {
-      title: "Scalable Microservices Social Hub",
-      description:
-        "A production-ready social media platform built with a distributed microservices architecture. It features secure user authentication, post management with multimedia support, real-time search indexing, and a centralized API Gateway, all synchronized via RabbitMQ and containerized for high availability.",
-      github: "https://github.com/nishantkumar35/micro-service-social-media",
-      demo: "#",
-      image:"https://i.ibb.co/DPMLwvhs/Screenshot-2026-03-24-205138.png",
-      technologies: [
-        "React",
-        "Node.js",
-        "Express",
-        "MongoDB",
-        "Redis",
-        "RabbitMQ (amqplib)",
-        "Tailwind CSS",
-        "Cloudinary",
-        "API Gateway (express-http-proxy)",
-        "JWT (jsonwebtoken)",
-        "Argon2",
-        "Joi (Validation)",
-        "Multer",
-        "Axios",
-        "Winston (Logging)",
-        "Helmet (Security)",
-        "Express Rate Limit",
-      ],
-      color: "indigo",
-    },
-  ];
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.15 } },
+};
 
-  const colorClasses = {
-    purple: {
-      border: "border-purple-500/30 hover:border-purple-500/60",
-      bg: "bg-purple-500/5 hover:bg-purple-500/10",
-      text: "text-purple-400",
-      button: "bg-purple-500 hover:bg-purple-600",
-      outline: "border-purple-500/50 text-purple-400 hover:bg-purple-500/10",
-    },
-    blue: {
-      border: "border-blue-500/30 hover:border-blue-500/60",
-      bg: "bg-blue-500/5 hover:bg-blue-500/10",
-      text: "text-blue-400",
-      button: "bg-blue-500 hover:bg-blue-600",
-      outline: "border-blue-500/50 text-blue-400 hover:bg-blue-500/10",
-    },
-    cyan: {
-      border: "border-cyan-500/30 hover:border-cyan-500/60",
-      bg: "bg-cyan-500/5 hover:bg-cyan-500/10",
-      text: "text-cyan-400",
-      button: "bg-cyan-500 hover:bg-cyan-600",
-      outline: "border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10",
-    },
-    indigo: {
-      border: "border-indigo-500/30 hover:border-indigo-500/60",
-      bg: "bg-indigo-500/5 hover:bg-indigo-500/10",
-      text: "text-indigo-400",
-      button: "bg-indigo-500 hover:bg-indigo-600",
-      outline: "border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10",
-    },
-  };
+const cardVariant = {
+  hidden: { opacity: 0, y: 40, scale: 0.97 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.65, ease: [0.34, 1.56, 0.64, 1] } },
+};
 
+function BrowserMockup({ src, alt, color }) {
   return (
-    <div className="min-h-screen text-white px-4 py-12 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-
-        <div className="text-center mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-            Featured <span className="text-purple-400">Projects</span>
-          </h1>
-
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            A selection of my recent work in full-stack web development
-          </p>
-        </div>
-
-        {/* Projects Grid */}
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => {
-            const colors = colorClasses[project.color];
-            const isHovered = hoveredIndex === index;
-
-            return (
-              <div
-                key={index}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                className={`
-                  relative border rounded-2xl overflow-hidden
-                  transition-all duration-300
-                  ${colors.border} ${colors.bg}
-                  ${isHovered ? "scale-[1.02] shadow-2xl" : "shadow-lg"}
-                `}
-              >
-                {/* Image Section */}
-
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                  />
-
-                  {/* Top Right Icons */}
-
-                  <div className="absolute top-3 right-3 flex gap-2">
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-lg bg-black/60 backdrop-blur border border-white/20 hover:bg-black/80 transition"
-                    >
-                      <Github className="w-4 h-4 text-white" />
-                    </a>
-
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-lg bg-black/60 backdrop-blur border border-white/20 hover:bg-black/80 transition"
-                    >
-                      <ExternalLink className="w-4 h-4 text-white" />
-                    </a>
-                  </div>
-                </div>
-
-                {/* Content */}
-
-                <div className="p-6">
-                  <h2 className="text-xl font-bold mb-2">{project.title}</h2>
-
-                  <p className="text-gray-300 text-sm mb-4">
-                    {project.description}
-                  </p>
-
-                  {/* Tech Stack */}
-
-                  <div className="flex flex-wrap gap-2 mb-5">
-                    {project.technologies.map((tech, i) => (
-                      <span
-                        key={i}
-                        className="px-3 py-1 bg-slate-800 text-gray-300 rounded-full text-xs border border-slate-700"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Buttons */}
-
-                  <div className="flex gap-3">
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm ${colors.button}`}
-                    >
-                      <Github className="w-4 h-4" />
-                      Code
-                    </a>
-
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm border ${colors.outline}`}
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Demo
-                    </a>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+    <div className="browser-mockup">
+      <div className="browser-bar">
+        <div className="browser-dot" style={{ background: "#FF5F57" }} />
+        <div className="browser-dot" style={{ background: "#FEBC2E" }} />
+        <div className="browser-dot" style={{ background: "#28C840" }} />
+        <div
+          style={{
+            flex: 1,
+            marginLeft: 8,
+            height: 20,
+            background: "rgba(37,99,235,0.08)",
+            borderRadius: 4,
+            border: `1px solid ${color}22`,
+          }}
+        />
+      </div>
+      <div style={{ position: "relative", overflow: "hidden", height: 200 }}>
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            transition: "transform 0.5s cubic-bezier(0.4,0,0.2,1)",
+            display: "block",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.06)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        />
+        {/* Gradient overlay at bottom */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 64,
+            background: "linear-gradient(to top, rgba(255,255,255,0.9), transparent)",
+            pointerEvents: "none",
+          }}
+        />
       </div>
     </div>
+  );
+}
+
+export default function Projects() {
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+
+  return (
+    <section
+      aria-label="Projects section"
+      style={{ padding: "96px 24px", maxWidth: 1280, margin: "0 auto" }}
+    >
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.7 }}
+        style={{ textAlign: "center", marginBottom: 72 }}
+      >
+        <span className="section-tag" style={{ marginBottom: 16, display: "inline-flex" }}>
+          🚀 Featured Work
+        </span>
+        <h2 className="section-heading" style={{ marginBottom: 16 }}>
+          Featured <span>Projects</span>
+        </h2>
+        <p className="section-sub" style={{ margin: "0 auto" }}>
+          A selection of my recent work — production-quality, full-stack web applications
+        </p>
+      </motion.div>
+
+      {/* Projects Grid */}
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-60px" }}
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+          gap: 28,
+        }}
+      >
+        {projects.map((project, idx) => (
+          <motion.article
+            key={idx}
+            variants={cardVariant}
+            onHoverStart={() => setHoveredIdx(idx)}
+            onHoverEnd={() => setHoveredIdx(null)}
+            style={{
+              background: "rgba(255,255,255,0.82)",
+              border: `1.5px solid ${hoveredIdx === idx ? project.accentBorder : "rgba(255,255,255,0.90)"}`,
+              borderRadius: 20,
+              boxShadow: hoveredIdx === idx
+                ? `0 24px 64px ${project.color}20, 0 4px 20px ${project.color}14, inset 0 1px 0 rgba(255,255,255,0.9)`
+                : "0 8px 32px rgba(37,99,235,0.09), inset 0 1px 0 rgba(255,255,255,0.9)",
+              overflow: "hidden",
+              transition: "all 0.4s cubic-bezier(0.4,0,0.2,1)",
+              transform: hoveredIdx === idx ? "translateY(-8px)" : "translateY(0)",
+              display: "flex",
+              flexDirection: "column",
+            }}
+            aria-label={`${project.title} — ${project.subtitle}`}
+          >
+            {/* Browser mockup image */}
+            <BrowserMockup src={project.image} alt={project.title} color={project.color} />
+
+            {/* Content */}
+            <div style={{ padding: "24px 24px 28px", flex: 1, display: "flex", flexDirection: "column" }}>
+              {/* Title */}
+              <div style={{ marginBottom: 14 }}>
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: project.color,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    marginBottom: 4,
+                  }}
+                >
+                  {project.subtitle}
+                </div>
+                <h3
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 800,
+                    color: "#1E293B",
+                    letterSpacing: "-0.025em",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {project.title}
+                </h3>
+              </div>
+
+              {/* Description */}
+              <p
+                style={{
+                  fontSize: 14,
+                  color: "#64748B",
+                  lineHeight: 1.7,
+                  marginBottom: 16,
+                  flex: 1,
+                }}
+              >
+                {project.description}
+              </p>
+
+              {/* Metrics */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 6,
+                  padding: "12px 14px",
+                  background: project.accent,
+                  borderRadius: 12,
+                  border: `1px solid ${project.color}18`,
+                  marginBottom: 16,
+                }}
+              >
+                {project.metrics.map((m, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 7,
+                      fontSize: 12,
+                      color: project.color,
+                      fontWeight: 500,
+                    }}
+                  >
+                    <span style={{ opacity: 0.8 }}>{m.icon}</span>
+                    {m.text}
+                  </div>
+                ))}
+              </div>
+
+              {/* Tech badges */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 20 }}>
+                {project.technologies.slice(0, 6).map((tech) => (
+                  <span
+                    key={tech}
+                    style={{
+                      padding: "3px 10px",
+                      borderRadius: 99,
+                      fontSize: 11,
+                      fontWeight: 600,
+                      background: project.accent,
+                      color: project.color,
+                      border: `1px solid ${project.color}22`,
+                    }}
+                  >
+                    {tech}
+                  </span>
+                ))}
+                {project.technologies.length > 6 && (
+                  <span
+                    style={{
+                      padding: "3px 10px",
+                      borderRadius: 99,
+                      fontSize: 11,
+                      fontWeight: 600,
+                      background: "rgba(100,116,139,0.08)",
+                      color: "#64748B",
+                      border: "1px solid rgba(100,116,139,0.15)",
+                    }}
+                  >
+                    +{project.technologies.length - 6} more
+                  </span>
+                )}
+              </div>
+
+              {/* Action buttons */}
+              <div style={{ display: "flex", gap: 10 }}>
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`View ${project.title} source code on GitHub`}
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 7,
+                    padding: "10px 0",
+                    borderRadius: 12,
+                    background: `linear-gradient(135deg, ${project.color}, ${project.color}cc)`,
+                    color: "white",
+                    fontSize: 13,
+                    fontWeight: 600,
+                    textDecoration: "none",
+                    boxShadow: `0 4px 14px ${project.color}30`,
+                    transition: "all 0.25s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = `0 8px 22px ${project.color}40`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = `0 4px 14px ${project.color}30`;
+                  }}
+                >
+                  <Github size={14} />
+                  Code
+                </a>
+                {project.demo !== "#" && (
+                  <a
+                    href={project.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`View ${project.title} live demo`}
+                    style={{
+                      flex: 1,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 7,
+                      padding: "10px 0",
+                      borderRadius: 12,
+                      background: "rgba(255,255,255,0.80)",
+                      color: project.color,
+                      border: `1.5px solid ${project.color}28`,
+                      fontSize: 13,
+                      fontWeight: 600,
+                      textDecoration: "none",
+                      transition: "all 0.25s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = project.accent;
+                      e.currentTarget.style.borderColor = `${project.color}44`;
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "rgba(255,255,255,0.80)";
+                      e.currentTarget.style.borderColor = `${project.color}28`;
+                      e.currentTarget.style.transform = "translateY(0)";
+                    }}
+                  >
+                    <ExternalLink size={14} />
+                    Live Demo
+                  </a>
+                )}
+              </div>
+            </div>
+          </motion.article>
+        ))}
+      </motion.div>
+    </section>
   );
 }

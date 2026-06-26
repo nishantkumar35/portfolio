@@ -1,46 +1,62 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
-import {
-  EnvelopeIcon,
-  PhoneIcon,
-  MapPinIcon,
-} from "@heroicons/react/24/outline";
+import { EnvelopeIcon, PhoneIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import emailjs from "@emailjs/browser";
+import { FaLinkedin, FaGithub } from "react-icons/fa";
+import { ArrowUp } from "lucide-react";
+import { Link } from "react-scroll";
 
-const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.4, 0, 0.2, 1] } },
+};
 
-  const [status, setStatus] = useState(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12 } },
+};
+
+const contactInfo = [
+  {
+    icon: <EnvelopeIcon style={{ width: 22, height: 22 }} />,
+    title: "Email",
+    value: "nk0090807@gmail.com",
+    href: "mailto:nk0090807@gmail.com",
+    color: "#2563EB",
+    accent: "rgba(37,99,235,0.07)",
+  },
+  {
+    icon: <PhoneIcon style={{ width: 22, height: 22 }} />,
+    title: "Phone",
+    value: "+91 9508619804",
+    href: "tel:+919508619804",
+    color: "#7C3AED",
+    accent: "rgba(124,58,237,0.07)",
+  },
+  {
+    icon: <MapPinIcon style={{ width: 22, height: 22 }} />,
+    title: "Location",
+    value: "Begusarai, Bihar, India",
+    href: null,
+    color: "#22C55E",
+    accent: "rgba(34,197,94,0.07)",
+  },
+];
+
+export default function Contact() {
+  const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
+  const [status, setStatus] = useState(null); // null | 'loading' | 'success' | 'error'
   const [focusedField, setFocusedField] = useState(null);
-
-  useEffect(() => {
-    const updateMousePosition = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener("mousemove", updateMousePosition);
-    return () => window.removeEventListener("mousemove", updateMousePosition);
-  }, []);
+  const [showBackTop, setShowBackTop] = useState(true);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // ✅ Fixed handleSubmit (EmailJS working)
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setStatus("loading");
     emailjs
       .send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -49,359 +65,417 @@ const Contact = () => {
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       )
       .then(
-        (result) => {
-          console.log("SUCCESS!", result.text);
+        () => {
           setStatus("success");
           setFormData({ name: "", email: "", subject: "", message: "" });
-
-          // Clear success message after 3s
-          setTimeout(() => setStatus(null), 3000);
+          setTimeout(() => setStatus(null), 4000);
         },
-        (error) => {
-          console.error("FAILED...", error.text);
+        () => {
           setStatus("error");
-
-          // Clear error message after 3s
-          setTimeout(() => setStatus(null), 3000);
+          setTimeout(() => setStatus(null), 4000);
         }
       );
   };
 
-  // Animations
-  const fadeUp = {
-    hidden: { opacity: 0, y: 40 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  };
-
-  const staggerContainer = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const scaleIn = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
-  };
-
-  const contactInfo = [
-    {
-      icon: <EnvelopeIcon className="h-6 w-6" />,
-      title: "Email",
-      value: "nk0090807@gmail.com",
-      gradient: "from-purple-500 to-pink-500",
-      bgGradient: "from-purple-500/20 to-pink-500/20",
-      hoverGradient: "hover:from-purple-500/30 hover:to-pink-500/30",
-    },
-    {
-      icon: <PhoneIcon className="h-6 w-6" />,
-      title: "Phone",
-      value: "+91 9508619804",
-      gradient: "from-blue-500 to-cyan-500",
-      bgGradient: "from-blue-500/20 to-cyan-500/20",
-      hoverGradient: "hover:from-blue-500/30 hover:to-cyan-500/30",
-    },
-    {
-      icon: <MapPinIcon className="h-6 w-6" />,
-      title: "Location",
-      value: "Begusarai, Bihar, India",
-      gradient: "from-green-500 to-emerald-500",
-      bgGradient: "from-green-500/20 to-emerald-500/20",
-      hoverGradient: "hover:from-green-500/30 hover:to-emerald-500/30",
-    },
-  ];
-
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Background Effects */}
-      <div>
-        <div className="absolute top-1/4 left-1/6 w-2 h-2 bg-purple-400 rounded-full animate-float opacity-60"></div>
-        <div className="absolute top-1/3 right-1/4 w-3 h-3 bg-cyan-400 rounded-full animate-float animation-delay-1000 opacity-60"></div>
-        <div className="absolute bottom-1/3 left-1/3 w-1 h-1 bg-pink-400 rounded-full animate-float animation-delay-2000 opacity-60"></div>
-
-        <div className="absolute top-20 right-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 left-10 w-60 h-60 bg-blue-500/10 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
-
-        {/* Mouse follower */}
-        <div
-          className="absolute w-96 h-96 bg-gradient-radial from-purple-500/10 via-blue-500/5 to-transparent rounded-full blur-3xl pointer-events-none"
-          style={{
-            transform: `translate(${mousePosition.x - 192}px, ${
-              mousePosition.y - 192
-            }px)`,
-            transition: "transform 0.6s ease-out",
-          }}
-        ></div>
-      </div>
-
-      <div className="relative z-10">
-        {/* Heading */}
+    <>
+      <section
+        aria-label="Contact section"
+        style={{ padding: "96px 24px 48px", maxWidth: 1280, margin: "0 auto" }}
+      >
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center pt-20 mb-16"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7 }}
+          style={{ textAlign: "center", marginBottom: 72 }}
         >
-          <h1 className="text-4xl p-2 md:text-5xl font-bold font-mono bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 bg-clip-text text-transparent relative">
-            Get in Touch
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-28 h-1 bg-gradient-to-r from-purple-400 to-cyan-400 rounded-full animate-pulse"></div>
-          </h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-gray-400 mt-4 text-lg"
-          >
-            Let's create something amazing together
-          </motion.p>
+          <span className="section-tag" style={{ marginBottom: 16, display: "inline-flex" }}>
+            ✉️ Get In Touch
+          </span>
+          <h2 className="section-heading" style={{ marginBottom: 16 }}>
+            Let's <span>Connect</span>
+          </h2>
+          <p className="section-sub" style={{ margin: "0 auto" }}>
+            Have a project in mind or just want to say hello? I'd love to hear from you.
+          </p>
         </motion.div>
 
-        <div className="flex flex-col lg:flex-row w-[90%] lg:w-[85%] mx-auto font-mono gap-8">
-          {/* Left Form */}
+        <div
+          style={{
+            display: "flex",
+            gap: 28,
+            flexWrap: "wrap",
+            alignItems: "flex-start",
+          }}
+        >
+          {/* Left — Form */}
           <motion.div
-            variants={scaleIn}
+            variants={fadeUp}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            className="lg:w-1/2 w-full"
+            viewport={{ once: true, margin: "-60px" }}
+            className="clay-card"
+            style={{ flex: "1 1 320px", padding: 36 }}
           >
-            <div className="bg-gradient-to-br from-slate-800/50 to-purple-900/30 backdrop-blur-sm rounded-3xl p-8 border border-purple-500/20 shadow-2xl hover:shadow-purple-500/20 transition-all duration-500">
-              <motion.div variants={fadeUp} className="text-center mb-8">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-2xl animate-bounce-slow">
-                    💬
-                  </div>
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Send Me a Message
-                  </h2>
-                </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28 }}>
+              <div
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 12,
+                  background: "linear-gradient(135deg, #2563EB, #7C3AED)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 20,
+                  boxShadow: "0 4px 14px rgba(37,99,235,0.25)",
+                }}
+              >
+                💬
+              </div>
+              <div>
+                <h3 style={{ fontWeight: 700, fontSize: 18, color: "#1E293B", letterSpacing: "-0.02em" }}>
+                  Send a Message
+                </h3>
+                <p style={{ color: "#64748B", fontSize: 13 }}>I'll get back to you within 24 hours</p>
+              </div>
+            </div>
+
+            <motion.form
+              variants={stagger}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              onSubmit={handleSubmit}
+              style={{ display: "flex", flexDirection: "column", gap: 16 }}
+            >
+              {[
+                { field: "name",    placeholder: "Your full name",        label: "Name" },
+                { field: "email",   placeholder: "your@email.com",        label: "Email" },
+                { field: "subject", placeholder: "What is this regarding?",label: "Subject" },
+              ].map(({ field, placeholder, label }) => (
+                <motion.div key={field} variants={fadeUp}>
+                  <label
+                    htmlFor={`contact-${field}`}
+                    style={{
+                      display: "block",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: "#475569",
+                      marginBottom: 6,
+                    }}
+                  >
+                    {label}
+                  </label>
+                  <input
+                    id={`contact-${field}`}
+                    type={field === "email" ? "email" : "text"}
+                    name={field}
+                    required
+                    value={formData[field]}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField(field)}
+                    onBlur={() => setFocusedField(null)}
+                    placeholder={placeholder}
+                    className="form-input"
+                    style={{
+                      boxShadow: focusedField === field
+                        ? "0 0 0 3px rgba(37,99,235,0.10), 0 2px 8px rgba(37,99,235,0.08)"
+                        : undefined,
+                    }}
+                  />
+                </motion.div>
+              ))}
+
+              <motion.div variants={fadeUp}>
+                <label
+                  htmlFor="contact-message"
+                  style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#475569", marginBottom: 6 }}
+                >
+                  Message
+                </label>
+                <textarea
+                  id="contact-message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  onFocus={() => setFocusedField("message")}
+                  onBlur={() => setFocusedField(null)}
+                  rows={5}
+                  required
+                  placeholder="Tell me about your project or idea..."
+                  className="form-input"
+                  style={{
+                    resize: "none",
+                    boxShadow: focusedField === "message"
+                      ? "0 0 0 3px rgba(37,99,235,0.10)"
+                      : undefined,
+                  }}
+                />
               </motion.div>
 
-              <motion.form
-                variants={staggerContainer}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                onSubmit={handleSubmit}
-                className="space-y-6"
+              <motion.button
+                variants={fadeUp}
+                type="submit"
+                disabled={status === "loading"}
+                whileHover={{ scale: status === "loading" ? 1 : 1.02, y: status === "loading" ? 0 : -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="btn-primary btn-ripple"
+                style={{
+                  width: "100%",
+                  justifyContent: "center",
+                  padding: "14px 24px",
+                  borderRadius: 14,
+                  fontSize: 15,
+                  opacity: status === "loading" ? 0.75 : 1,
+                  cursor: status === "loading" ? "not-allowed" : "pointer",
+                }}
               >
-                {[
-                  { field: "name", placeholder: "Your name", icon: "👤" },
-                  { field: "email", placeholder: "Enter your email", icon: "📧" },
-                  { field: "subject", placeholder: "What is this regarding?", icon: "📝" },
-                ].map(({ field, placeholder, icon }) => (
-                  <motion.div
-                    key={field}
-                    variants={fadeUp}
-                    className="relative group"
-                  >
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lg z-10">
-                      {icon}
-                    </div>
-                    <input
-                      type={field === "email" ? "email" : "text"}
-                      name={field}
-                      required
-                      value={formData[field]}
-                      onChange={handleChange}
-                      onFocus={() => setFocusedField(field)}
-                      onBlur={() => setFocusedField(null)}
-                      className={`w-full pl-12 pr-4 py-4 bg-slate-700/50 border rounded-2xl text-white placeholder-gray-400 transition-all duration-300 focus:outline-none backdrop-blur-sm ${
-                        focusedField === field
-                          ? "border-purple-400 shadow-lg shadow-purple-500/20 bg-slate-700/70"
-                          : "border-slate-600 hover:border-slate-500"
-                      }`}
-                      placeholder={placeholder}
-                    />
-                  </motion.div>
-                ))}
+                {status === "loading" ? (
+                  <>
+                    <svg style={{ width: 16, height: 16, animation: "spin-slow 1s linear infinite" }} fill="none" viewBox="0 0 24 24">
+                      <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Sending…
+                  </>
+                ) : (
+                  <>
+                    Send Message
+                    <PaperAirplaneIcon style={{ width: 16, height: 16, marginLeft: 4 }} />
+                  </>
+                )}
+              </motion.button>
 
-                {/* Message textarea */}
-                <motion.div variants={fadeUp} className="relative group">
-                  <div className="absolute left-3 top-4 text-lg z-10">💭</div>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField("message")}
-                    onBlur={() => setFocusedField(null)}
-                    rows="5"
-                    required
-                    className={`w-full pl-12 pr-4 py-4 bg-slate-700/50 border rounded-2xl text-white placeholder-gray-400 transition-all duration-300 focus:outline-none backdrop-blur-sm resize-none ${
-                      focusedField === "message"
-                        ? "border-purple-400 shadow-lg shadow-purple-500/20 bg-slate-700/70"
-                        : "border-slate-600 hover:border-slate-500"
-                    }`}
-                    placeholder="Your message here..."
-                  ></textarea>
-                </motion.div>
-
-                {/* Submit */}
-                <motion.button
-                  type="submit"
-                  variants={fadeUp}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-6 rounded-2xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/30 flex items-center justify-center gap-3 group"
+              {/* Status messages */}
+              {status === "success" && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  style={{
+                    padding: "14px 18px",
+                    borderRadius: 12,
+                    background: "rgba(34,197,94,0.08)",
+                    border: "1px solid rgba(34,197,94,0.25)",
+                    color: "#16a34a",
+                    fontSize: 14,
+                    fontWeight: 500,
+                    textAlign: "center",
+                  }}
                 >
-                  <span>Send Message</span>
-                  <PaperAirplaneIcon className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
-                </motion.button>
-
-                {/* Status */}
-                {status === "success" && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-center p-4 bg-green-500/20 border border-green-400/30 rounded-2xl text-green-300"
-                  >
-                    ✅ Your message has been sent successfully!
-                  </motion.div>
-                )}
-                {status === "error" && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-center p-4 bg-red-500/20 border border-red-400/30 rounded-2xl text-red-300"
-                  >
-                    ❌ Something went wrong. Please try again.
-                  </motion.div>
-                )}
-              </motion.form>
-            </div>
+                  ✅ Message sent! I'll get back to you soon.
+                </motion.div>
+              )}
+              {status === "error" && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  style={{
+                    padding: "14px 18px",
+                    borderRadius: 12,
+                    background: "rgba(239,68,68,0.08)",
+                    border: "1px solid rgba(239,68,68,0.22)",
+                    color: "#dc2626",
+                    fontSize: 14,
+                    fontWeight: 500,
+                    textAlign: "center",
+                  }}
+                >
+                  ❌ Something went wrong. Please try again.
+                </motion.div>
+              )}
+            </motion.form>
           </motion.div>
 
-          {/* Right Info */}
+          {/* Right — Info */}
           <motion.div
-            variants={scaleIn}
+            variants={fadeUp}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            className="lg:w-1/2 w-full"
+            viewport={{ once: true, margin: "-60px" }}
+            style={{ flex: "1 1 280px", display: "flex", flexDirection: "column", gap: 20 }}
           >
-            <div className="bg-gradient-to-br from-slate-800/50 to-blue-900/30 backdrop-blur-sm rounded-3xl p-8 border border-blue-500/20 shadow-2xl hover:shadow-blue-500/20 transition-all duration-500">
-              <motion.div variants={fadeUp} className="text-center mb-8">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="w-12 h-12 p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-2xl animate-pulse">
-                    📞
-                  </div>
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                    Contact Information
-                  </h2>
-                </div>
-              </motion.div>
-
-              <motion.div
-                variants={staggerContainer}
-                initial="hidden"
-                whileInView="visible"
-                className="space-y-6"
+            {/* Contact cards */}
+            {contactInfo.map((info) => (
+              <div
+                key={info.title}
+                className="clay-card"
+                style={{ padding: "20px 24px" }}
               >
-                {contactInfo.map((info) => (
-                  <motion.div
-                    key={info.title}
-                    variants={fadeUp}
-                    className={`flex items-center gap-4 p-6 bg-gradient-to-r ${info.bgGradient} backdrop-blur-sm rounded-2xl border border-white/10 ${info.hoverGradient} transition-all duration-300 hover:scale-105 group cursor-pointer`}
-                  >
-                    <div
-                      className={`p-4 bg-gradient-to-r ${info.gradient} rounded-2xl text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      {info.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-white">
-                        {info.title}
-                      </h3>
-                      <p className="text-gray-300 pr-2">{info.value}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-
-              {/* Footer */}
-              <motion.footer
-                variants={fadeUp}
-                className="text-center mt-12 p-6 bg-gradient-to-r from-slate-700/30 to-slate-600/30 rounded-2xl border border-white/10"
-              >
-                <p className="text-gray-300">
-                  © {new Date().getFullYear()} — Made with
-                  <span className="text-red-500 mx-2 animate-pulse text-xl">
-                    ❤️
-                  </span>
-                  by{" "}
+                {info.href ? (
                   <a
-                    href="https://www.instagram.com/n.i.s.h.a.n.t.2/"
+                    href={info.href}
+                    style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 16 }}
+                  >
+                    <ContactIconBox icon={info.icon} color={info.color} accent={info.accent} />
+                    <ContactDetails title={info.title} value={info.value} color={info.color} />
+                  </a>
+                ) : (
+                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                    <ContactIconBox icon={info.icon} color={info.color} accent={info.accent} />
+                    <ContactDetails title={info.title} value={info.value} color={info.color} />
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* Social links */}
+            <div
+              className="clay-card"
+              style={{ padding: "20px 24px" }}
+            >
+              <p style={{ fontSize: 13, fontWeight: 600, color: "#64748B", marginBottom: 14 }}>
+                CONNECT ON SOCIAL
+              </p>
+              <div style={{ display: "flex", gap: 12 }}>
+                {[
+                  { href: "https://github.com/nishantkumar35", Icon: FaGithub, label: "GitHub", color: "#1E293B" },
+                  { href: "https://www.linkedin.com/in/nishantkumar35/", Icon: FaLinkedin, label: "LinkedIn", color: "#0A66C2" },
+                  { href: "mailto:nk0090807@gmail.com", icon: <EnvelopeIcon style={{ width: 18, height: 18 }} />, label: "Email", color: "#2563EB" },
+                ].map(({ href, Icon, icon, label, color }) => (
+                  <a
+                    key={label}
+                    href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent font-semibold"
+                    aria-label={label}
+                    style={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: 12,
+                      background: "rgba(255,255,255,0.70)",
+                      border: "1.5px solid rgba(37,99,235,0.12)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#64748B",
+                      fontSize: 18,
+                      textDecoration: "none",
+                      transition: "all 0.25s",
+                      boxShadow: "0 2px 8px rgba(37,99,235,0.07)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = color;
+                      e.currentTarget.style.borderColor = `${color}44`;
+                      e.currentTarget.style.transform = "translateY(-3px)";
+                      e.currentTarget.style.boxShadow = `0 6px 18px ${color}20`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "#64748B";
+                      e.currentTarget.style.borderColor = "rgba(37,99,235,0.12)";
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow = "0 2px 8px rgba(37,99,235,0.07)";
+                    }}
                   >
-                    Nishant
+                    {Icon ? <Icon /> : icon}
                   </a>
-                </p>
-              </motion.footer>
+                ))}
+              </div>
+            </div>
+
+            {/* Availability card */}
+            <div
+              className="clay-card"
+              style={{
+                padding: "20px 24px",
+                background: "linear-gradient(135deg, rgba(37,99,235,0.06), rgba(124,58,237,0.06))",
+                border: "1.5px solid rgba(37,99,235,0.14)",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                <span
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background: "#22C55E",
+                    display: "inline-block",
+                    boxShadow: "0 0 0 3px rgba(34,197,94,0.25)",
+                  }}
+                />
+                <span style={{ fontSize: 13, fontWeight: 700, color: "#16a34a" }}>
+                  Available for Opportunities
+                </span>
+              </div>
+              <p style={{ fontSize: 13.5, color: "#475569", lineHeight: 1.6 }}>
+                Open to full-time roles, internships, and exciting freelance projects.
+              </p>
             </div>
           </motion.div>
         </div>
-      </div>
+      </section>
 
-      {/* Extra Animations */}
-      <style jsx>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0) scale(1);
-            opacity: 0.6;
-          }
-          50% {
-            transform: translateY(-30px) scale(1.2);
-            opacity: 1;
-          }
-        }
-        @keyframes bounce-slow {
-          0%,
-          100% {
-            transform: translateY(0) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-8px) rotate(5deg);
-          }
-        }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
-        .animate-bounce-slow {
-          animation: bounce-slow 3s ease-in-out infinite;
-        }
-        .animation-delay-1000 {
-          animation-delay: 1s;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .bg-gradient-radial {
-          background: radial-gradient(var(--tw-gradient-stops));
-        }
-        textarea::-webkit-scrollbar {
-          width: 6px;
-        }
-        textarea::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, #a855f7, #ec4899);
-          border-radius: 3px;
-        }
-      `}</style>
+      {/* ── Footer ── */}
+      <footer
+        style={{
+          borderTop: "1px solid rgba(37,99,235,0.10)",
+          padding: "48px 24px",
+          textAlign: "center",
+        }}
+      >
+        <p
+          style={{
+            fontSize: 16,
+            color: "#64748B",
+            fontWeight: 500,
+            marginBottom: 6,
+            lineHeight: 1.7,
+          }}
+        >
+          Thanks for visiting.{" "}
+          <span className="gradient-text" style={{ fontWeight: 700 }}>
+            Let's build something amazing together.
+          </span>
+        </p>
+        <p style={{ fontSize: 13, color: "#94A3B8", marginTop: 4 }}>
+          © {new Date().getFullYear()} Nishant Kumar — Made with ❤️ in India
+        </p>
+      </footer>
+
+      {/* ── Back to top ── */}
+      <Link to="home" smooth={true} duration={700} offset={-64}>
+        <button
+          className="back-to-top"
+          aria-label="Back to top"
+          title="Back to top"
+        >
+          <ArrowUp size={20} />
+        </button>
+      </Link>
+    </>
+  );
+}
+
+function ContactIconBox({ icon, color, accent }) {
+  return (
+    <div
+      style={{
+        width: 46,
+        height: 46,
+        borderRadius: 13,
+        background: `linear-gradient(135deg, ${color}, ${color}cc)`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "white",
+        flexShrink: 0,
+        boxShadow: `0 4px 14px ${color}28`,
+      }}
+    >
+      {icon}
     </div>
   );
-};
+}
 
-export default Contact;
+function ContactDetails({ title, value, color }) {
+  return (
+    <div>
+      <div style={{ fontSize: 12, fontWeight: 600, color: "#94A3B8", letterSpacing: "0.05em", marginBottom: 2 }}>
+        {title.toUpperCase()}
+      </div>
+      <div style={{ fontSize: 14.5, fontWeight: 600, color: "#1E293B" }}>{value}</div>
+    </div>
+  );
+}
