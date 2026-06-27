@@ -51,7 +51,7 @@ const educationData = [
     title: "Intermediate (12th)",
     duration: "2021 – 2023",
     institution: "M.S. College Manjhaul, Bihar",
-    metric: "60%",
+    metric: "61%",
     metricLabel: "Score",
     color: "#7C3AED",
     accent: "rgba(124,58,237,0.08)",
@@ -72,8 +72,8 @@ const educationData = [
 const stats = [
   { value: 15,  suffix: "+", label: "Projects Built" },
   { value: 25,  suffix: "+", label: "Technologies" },
-  { value: 350, suffix: "+", label: "Problems Solved" },
-  { value: 2,   suffix: "+", label: "Years Learning" },
+  { value: 400, suffix: "+", label: "Problems Solved" },
+  { value: 3,   suffix: "+", label: "Years Learning" },
 ];
 
 export default function About() {
