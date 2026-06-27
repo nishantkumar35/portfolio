@@ -482,7 +482,7 @@ body {
   justify-content: center;
   box-shadow: 0 4px 20px rgba(37,99,235,0.30);
   transition: var(--transition-smooth);
-  z-index: 999;
+  z-index: 90;
 }
 .back-to-top:hover {
   transform: translateY(-3px);
